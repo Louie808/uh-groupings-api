@@ -31,6 +31,7 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
      */
     @PostConstruct
     private void checkForPwd() throws IOException {
+        // to delete
         // Access the file regardless of the environment using Spring ClassPathResource.
         // The file name should be unique to the project.
         File resource = new ClassPathResource("custom.properties").getFile();
