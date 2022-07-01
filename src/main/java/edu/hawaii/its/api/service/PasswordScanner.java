@@ -1,35 +1,48 @@
 package edu.hawaii.its.api.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.api.type.PasswordFoundException;
+import edu.hawaii.its.api.exception.PasswordFoundException;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PasswordScanner {
 
     private static final Log logger = LogFactory.getLog(PasswordScanner.class);
 
-    @PostConstruct
-    public void init() throws PasswordFoundException {
-        logger.info("init; starting...");
-        checkForPasswords();
-        logger.info("init; check for passwords finished.");
-        logger.info("init; started.");
+    private String dirname = "src/main/resources";
+
+    /**
+     * setDirname: sets the directory name (src/main/resources)
+     *
+     */
+    public void setDirname(String dirname) {
+        this.dirname = dirname;
     }
 
+    @PostConstruct
+    public void init() throws PasswordFoundException {
+        logger.info("init; check for passwords starting...");
+        checkForPasswords();
+        logger.info("init; check for passwords finished.");
+    }
+
+    /**
+     * checkForPasswords: checks all .properties files in a directory for instance(s) of password
+     *
+     * @throws PasswordFoundException if any passwords are found.
+     */
     private void checkForPasswords() throws PasswordFoundException {
-        CheckForPwdPattern checkForPwdPattern = new CheckForPwdPattern();
+        PatternPropertyChecker checkForPattern = new PatternPropertyChecker();
 
         String patternResult = "";
-        String pattern = "^.*password.*\\=(?!\\s*$).+";
-        String dirname = "src/main/resources";
-        List<String> fileLocations = checkForPwdPattern.fileLocations(".properties", dirname, pattern);
-        if (fileLocations != null && !fileLocations.isEmpty()) {
+        List<String> fileLocations = checkForPattern.getPatternLocation(dirname, ".properties");
+        if (!fileLocations.isEmpty()) {
             for (String list : fileLocations) {
                 patternResult += "\n" + list;
             }
