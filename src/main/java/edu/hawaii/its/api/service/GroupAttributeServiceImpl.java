@@ -6,6 +6,7 @@ import edu.hawaii.its.api.wrapper.AttributeAssignmentsResults;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.SyncDestination;
+import edu.hawaii.its.api.type.OptType;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
@@ -81,9 +82,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Override
     public List<SyncDestination> getAllSyncDestinations(String currentUsername, String path) {
 
-        if (!memberAttributeService.isAdmin(currentUsername) && !memberAttributeService.isOwner(currentUsername)) {
-            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
-        }
+        checkPrivileges(currentUsername);
 
         Grouping grouping = groupingAssignmentService.getGrouping(path, currentUsername);
         List<SyncDestination> finSyncDestList = grouperApiService.syncDestinations();
@@ -114,28 +113,20 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      * Turn the ability for users to opt-in/opt-out to a grouping on or off.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptStatus(String groupingPath, String ownerUsername, String preferenceId,
-                                                          boolean isOptOn) {
+    public List<GroupingsServiceResult> changeOptStatus(String groupingPath, String ownerUsername, OptType optType, boolean isOptValue) {
+
+        checkPrivileges(groupingPath, ownerUsername);
+
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        if (!memberAttributeService.isOwner(groupingPath, ownerUsername) && !memberAttributeService.isAdmin(
-                ownerUsername)) {
-            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
-        }
-
-        if (OPT_IN.equals(preferenceId)) {
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + INCLUDE, isOptOn));
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + EXCLUDE, isOptOn));
-            results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, OPT_IN, isOptOn));
-        } else if (OPT_OUT.equals(preferenceId)) {
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + EXCLUDE, isOptOn));
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + INCLUDE, isOptOn));
-            results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, OPT_OUT, isOptOn));
-        } else {
-            throw new UnsupportedOperationException();
-        }
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN,
+                optType == OptType.IN ? groupingPath + INCLUDE : groupingPath + EXCLUDE, isOptValue));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT,
+                optType == OptType.IN ? groupingPath + EXCLUDE : groupingPath + INCLUDE, isOptValue));
+        results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, optType.getValue(), isOptValue));
 
         return results;
+
     }
 
     /**
@@ -146,10 +137,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     public GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername,
             String attributeName, boolean turnAttributeOn) {
 
-        if (!memberAttributeService.isOwner(groupPath, ownerUsername) && !memberAttributeService.isAdmin(
-                ownerUsername)) {
-            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
-        }
+        checkPrivileges(groupPath, ownerUsername);
         GroupingsServiceResult gsr;
         String verb = "removed from ";
         if (turnAttributeOn) {
@@ -229,6 +217,21 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         grouperApiService.updateGroupDescription(groupPath, description);
 
         return helperService.makeGroupingsServiceResult(SUCCESS + ", description updated", action);
+    }
+
+    //TODO: Move both checkPrivileges helper methods to the Governor class once it's built
+    private void checkPrivileges(String groupingPath, String ownerUsername) {
+        if (!memberAttributeService.isOwner(groupingPath, ownerUsername) && !memberAttributeService.isAdmin(
+                ownerUsername)) {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+        }
+    }
+
+    private void checkPrivileges(String ownerUsername) {
+        if (!memberAttributeService.isOwner(ownerUsername) && !memberAttributeService.isAdmin(
+                ownerUsername)) {
+            throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
+        }
     }
 
     /**

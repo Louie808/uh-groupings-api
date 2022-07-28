@@ -15,6 +15,7 @@ import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.api.type.RemoveMemberResult;
 import edu.hawaii.its.api.type.SyncDestination;
+import edu.hawaii.its.api.type.OptType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,12 +46,6 @@ public class GroupingsRestControllerv2_1 {
 
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
-
-    @Value("${groupings.api.opt_in}")
-    private String OPT_IN;
-
-    @Value("${groupings.api.opt_out}")
-    private String OPT_OUT;
 
     @Autowired
     private GroupAttributeService groupAttributeService;
@@ -364,7 +359,7 @@ public class GroupingsRestControllerv2_1 {
     public ResponseEntity<List<GroupingsServiceResult>> enablePreference(
             @RequestHeader(CURRENT_USER) String currentUser,
             @PathVariable String path,
-            @PathVariable String id) {
+            @PathVariable OptType id) {
         logger.info("Entered REST enablePreference");
         return ResponseEntity
                 .ok()
@@ -380,7 +375,7 @@ public class GroupingsRestControllerv2_1 {
     public ResponseEntity<List<GroupingsServiceResult>> disablePreference(
             @RequestHeader(CURRENT_USER) String currentUser,
             @PathVariable String path,
-            @PathVariable String id) {
+            @PathVariable OptType id) {
         logger.info("Entered REST disablePreference");
         return ResponseEntity
                 .ok()
