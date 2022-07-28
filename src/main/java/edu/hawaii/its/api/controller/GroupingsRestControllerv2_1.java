@@ -1,21 +1,12 @@
 package edu.hawaii.its.api.controller;
 
+import edu.hawaii.its.api.type.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.api.service.GroupAttributeService;
 import edu.hawaii.its.api.service.GroupingAssignmentService;
 import edu.hawaii.its.api.service.MemberAttributeService;
 import edu.hawaii.its.api.service.MembershipService;
-import edu.hawaii.its.api.type.AddMemberResult;
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingPath;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Membership;
-import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.api.type.RemoveMemberResult;
-import edu.hawaii.its.api.type.SyncDestination;
-import edu.hawaii.its.api.type.OptType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -359,11 +350,12 @@ public class GroupingsRestControllerv2_1 {
     public ResponseEntity<List<GroupingsServiceResult>> enablePreference(
             @RequestHeader(CURRENT_USER) String currentUser,
             @PathVariable String path,
-            @PathVariable OptType id) {
+            @PathVariable String id) {
         logger.info("Entered REST enablePreference");
         return ResponseEntity
                 .ok()
                 .body(groupAttributeService.changeOptStatus(path, currentUser, id, true));
+        groupAttributeService.changeOptStatus(new Request.Builder().withOptId(id).withOptValue(true));
     }
 
     /**
@@ -375,7 +367,7 @@ public class GroupingsRestControllerv2_1 {
     public ResponseEntity<List<GroupingsServiceResult>> disablePreference(
             @RequestHeader(CURRENT_USER) String currentUser,
             @PathVariable String path,
-            @PathVariable OptType id) {
+            @PathVariable String id) {
         logger.info("Entered REST disablePreference");
         return ResponseEntity
                 .ok()

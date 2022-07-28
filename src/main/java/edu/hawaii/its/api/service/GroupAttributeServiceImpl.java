@@ -113,20 +113,22 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      * Turn the ability for users to opt-in/opt-out to a grouping on or off.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptStatus(String groupingPath, String ownerUsername, OptType optType, boolean isOptValue) {
+    public List<GroupingsServiceResult> changeOptStatus(String groupingPath, String ownerUsername, String preferenceId, boolean isOptValue) {
 
         checkPrivileges(groupingPath, ownerUsername);
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN,
-                optType == OptType.IN ? groupingPath + INCLUDE : groupingPath + EXCLUDE, isOptValue));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT,
-                optType == OptType.IN ? groupingPath + EXCLUDE : groupingPath + INCLUDE, isOptValue));
-        results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, optType.getValue(), isOptValue));
+        if (OPT_IN.equals(preferenceId)) {
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + INCLUDE, isOptValue));
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + EXCLUDE, isOptValue));
+        } else if (OPT_OUT.equals(preferenceId)) {
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + EXCLUDE, isOptValue));
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + INCLUDE, isOptValue));
+        }
+        results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, preferenceId, isOptValue));
 
         return results;
-
     }
 
     /**

@@ -14,7 +14,7 @@ public interface GroupAttributeService {
     List<SyncDestination> getSyncDestinations(Grouping grouping);
 
     List<GroupingsServiceResult> changeOptStatus(String groupingPath, String currentUsername,
-            OptType optType, boolean isOptOn);
+            String preferenceId, boolean isOptValue);
 
     GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername,
             String attributeName, boolean turnAttributeOn);
