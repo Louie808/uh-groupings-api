@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.controller;
 
+import edu.hawaii.its.api.type.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import edu.hawaii.its.api.access.User;
@@ -9,16 +10,6 @@ import edu.hawaii.its.api.service.GroupAttributeService;
 import edu.hawaii.its.api.service.GroupingAssignmentService;
 import edu.hawaii.its.api.service.MemberAttributeService;
 import edu.hawaii.its.api.service.MembershipService;
-import edu.hawaii.its.api.type.AddMemberResult;
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingPath;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Membership;
-import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.api.type.RemoveMemberResult;
-import edu.hawaii.its.api.type.SyncDestination;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -584,7 +575,7 @@ public class GroupingsRestControllerv2_1Test {
     @Test
     @WithMockUhUser
     public void enablePreferenceSyncDestTest() throws Exception {
-        given(groupAttributeService.changeOptStatus("grouping", USERNAME, OPT_IN, true))
+        given(groupAttributeService.changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_IN).withOptValue(true)))
                 .willReturn(gsrListIn());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_IN + "/enable")
                         .with(csrf())
@@ -594,9 +585,9 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
 
         verify(groupAttributeService, times(1))
-                .changeOptStatus("grouping", USERNAME, OPT_IN, true);
+                .changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_IN).withOptValue(true));
 
-        given(groupAttributeService.changeOptStatus("grouping", USERNAME, OPT_OUT, true))
+        given(groupAttributeService.changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_OUT).withOptValue(true)))
                 .willReturn(gsrListOut());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_OUT + "/enable")
                         .with(csrf())
@@ -606,7 +597,7 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
         verify(groupAttributeService, times(1))
-                .changeOptStatus("grouping", USERNAME, OPT_OUT, true);
+                .changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_OUT).withOptValue(true));
 
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());

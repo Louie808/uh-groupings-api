@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.SyncDestination;
-import edu.hawaii.its.api.type.OptType;
+import edu.hawaii.its.api.type.*;
 
 import java.util.List;
 
@@ -13,8 +10,7 @@ public interface GroupAttributeService {
 
     List<SyncDestination> getSyncDestinations(Grouping grouping);
 
-    List<GroupingsServiceResult> changeOptStatus(String groupingPath, String currentUsername,
-            String preferenceId, boolean isOptValue);
+    List<GroupingsServiceResult> changeOptStatus(Request.Builder requestBuilder);
 
     GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername,
             String attributeName, boolean turnAttributeOn);

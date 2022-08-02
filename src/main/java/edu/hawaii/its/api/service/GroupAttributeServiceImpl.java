@@ -1,12 +1,9 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.type.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.api.wrapper.AttributeAssignmentsResults;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.SyncDestination;
-import edu.hawaii.its.api.type.OptType;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
@@ -113,20 +110,18 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      * Turn the ability for users to opt-in/opt-out to a grouping on or off.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptStatus(String groupingPath, String ownerUsername, String preferenceId, boolean isOptValue) {
+    public List<GroupingsServiceResult> changeOptStatus(Request.Builder requestBuilder) {
 
-        checkPrivileges(groupingPath, ownerUsername);
+        checkPrivileges(requestBuilder.getPath(), requestBuilder.getCurrentUser());
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        if (OPT_IN.equals(preferenceId)) {
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + INCLUDE, isOptValue));
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + EXCLUDE, isOptValue));
-        } else if (OPT_OUT.equals(preferenceId)) {
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + EXCLUDE, isOptValue));
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + INCLUDE, isOptValue));
-        }
-        results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, preferenceId, isOptValue));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN,
+                requestBuilder.getPathExtension(PRIVILEGE_OPT_IN), requestBuilder.getOptValue()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT,
+                requestBuilder.getPathExtension(PRIVILEGE_OPT_OUT), requestBuilder.getOptValue()));
+        results.add(changeGroupAttributeStatus(requestBuilder.getPath(), requestBuilder.getCurrentUser(),
+                requestBuilder.getOptId(), requestBuilder.getOptValue()));
 
         return results;
     }
