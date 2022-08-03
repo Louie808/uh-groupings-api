@@ -354,8 +354,8 @@ public class GroupingsRestControllerv2_1 {
         logger.info("Entered REST enablePreference");
         return ResponseEntity
                 .ok()
-                .body(groupAttributeService.changeOptStatus(new optRequest.Builder(currentUser)
-                        .withPath(path).withOptId(id).withOptValue(true).build()));
+                .body(groupAttributeService.changeOptStatus(new OptRequest.Builder(currentUser)
+                        .withPath(path).withOptId(id).withIsOptValue(true).build()));
     }
 
     /**
@@ -371,7 +371,8 @@ public class GroupingsRestControllerv2_1 {
         logger.info("Entered REST disablePreference");
         return ResponseEntity
                 .ok()
-                .body(groupAttributeService.changeOptStatus(new optRequest.Builder(currentUser).withPath(path).withOptId(id).withOptValue(false).build()));
+                .body(groupAttributeService.changeOptStatus(new OptRequest.Builder(currentUser)
+                        .withPath(path).withOptId(id).withIsOptValue(false).build()));
     }
 
     /**

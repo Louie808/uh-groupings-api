@@ -2,7 +2,6 @@ package edu.hawaii.its.api.type;
 
 import java.util.Objects;
 
-
 public class Request {
     private final String currentUser;
     private final String path;
