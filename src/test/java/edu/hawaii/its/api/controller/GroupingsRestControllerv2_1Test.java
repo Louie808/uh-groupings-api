@@ -575,7 +575,7 @@ public class GroupingsRestControllerv2_1Test {
     @Test
     @WithMockUhUser
     public void enablePreferenceSyncDestTest() throws Exception {
-        given(groupAttributeService.changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_IN).withOptValue(true)))
+        given(groupAttributeService.changeOptStatus(new optRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_IN).withOptValue(true).build()))
                 .willReturn(gsrListIn());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_IN + "/enable")
                         .with(csrf())
@@ -585,9 +585,9 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
 
         verify(groupAttributeService, times(1))
-                .changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_IN).withOptValue(true));
+                .changeOptStatus(new optRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_IN).withOptValue(true).build());
 
-        given(groupAttributeService.changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_OUT).withOptValue(true)))
+        given(groupAttributeService.changeOptStatus(new optRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_OUT).withOptValue(true).build()))
                 .willReturn(gsrListOut());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_OUT + "/enable")
                         .with(csrf())
@@ -597,7 +597,7 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
         verify(groupAttributeService, times(1))
-                .changeOptStatus("grouping", USERNAME, new Request.Builder().withOptId(OPT_OUT).withOptValue(true));
+                .changeOptStatus(new optRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_OUT).withOptValue(true).build());
 
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());

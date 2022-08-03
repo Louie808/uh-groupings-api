@@ -110,18 +110,15 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      * Turn the ability for users to opt-in/opt-out to a grouping on or off.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptStatus(Request.Builder requestBuilder) {
+    public List<GroupingsServiceResult> changeOptStatus(optRequest request) {
 
-        checkPrivileges(requestBuilder.getPath(), requestBuilder.getCurrentUser());
+        checkPrivileges(request.getPath(), request.getCurrentUser());
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN,
-                requestBuilder.getPathExtension(PRIVILEGE_OPT_IN), requestBuilder.getOptValue()));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT,
-                requestBuilder.getPathExtension(PRIVILEGE_OPT_OUT), requestBuilder.getOptValue()));
-        results.add(changeGroupAttributeStatus(requestBuilder.getPath(), requestBuilder.getCurrentUser(),
-                requestBuilder.getOptId(), requestBuilder.getOptValue()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, request.getPathExtension(PRIVILEGE_OPT_IN), request.getOptValue()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, request.getPathExtension(PRIVILEGE_OPT_OUT), request.getOptValue()));
+        results.add(changeGroupAttributeStatus(request.getPath(), request.getCurrentUser(), request.getOptId(), request.getOptValue()));
 
         return results;
     }
