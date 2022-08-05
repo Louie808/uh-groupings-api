@@ -575,8 +575,13 @@ public class GroupingsRestControllerv2_1Test {
     @Test
     @WithMockUhUser
     public void enablePreferenceSyncDestTest() throws Exception {
-        given(groupAttributeService.changeOptStatus(new OptRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_IN).withIsOptValue(true).build()))
-                .willReturn(gsrListIn());
+        OptRequest optRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.IN)
+                .withIsOptEnable(true)
+                .build();
+        given(groupAttributeService.changeOptStatus(optRequest)).willReturn(gsrListIn());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_IN + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
@@ -585,9 +590,15 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
 
         verify(groupAttributeService, times(1))
-                .changeOptStatus(new OptRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_IN).withIsOptValue(true).build());
+                .changeOptStatus(optRequest);
 
-        given(groupAttributeService.changeOptStatus(new OptRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_OUT).withIsOptValue(true).build()))
+        optRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.OUT)
+                .withIsOptEnable(true)
+                .build();
+        given(groupAttributeService.changeOptStatus(optRequest))
                 .willReturn(gsrListOut());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_OUT + "/enable")
                         .with(csrf())
@@ -597,7 +608,8 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
         verify(groupAttributeService, times(1))
-                .changeOptStatus(new OptRequest.Builder(USERNAME).withPath("grouping").withOptId(OPT_OUT).withIsOptValue(true).build());
+                .changeOptStatus(optRequest);
+
 
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());

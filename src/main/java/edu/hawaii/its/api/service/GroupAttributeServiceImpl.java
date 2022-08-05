@@ -112,16 +112,16 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Override
     public List<GroupingsServiceResult> changeOptStatus(OptRequest request) {
 
-        checkPrivileges(request.getPath(), request.getCurrentUser());
+        checkPrivileges(request.getPath(), request.getUsername());
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, request.getPathExtension(OPT_IN),
-                request.getIsOptValue()));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, request.getPathExtension(OPT_OUT),
-                request.getIsOptValue()));
-        results.add(changeGroupAttributeStatus(request.getPath(), request.getCurrentUser(), request.getOptId(),
-                request.getIsOptValue()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, request.getPathExtension(OptType.IN),
+                request.getIsOptEnable()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, request.getPathExtension(OptType.OUT),
+                request.getIsOptEnable()));
+        results.add(changeGroupAttributeStatus(request.getPath(), request.getUsername(), request.getOptId(),
+                request.getIsOptEnable()));
 
         return results;
     }

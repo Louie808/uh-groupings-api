@@ -11,8 +11,16 @@ public enum OptType {
         this.value = value;
     }
 
-    public String getValue() {
+    public String value() {
         return value;
     }
 
+    public static OptType find(String value) {
+        for (OptType type : OptType.values()) {
+            if (type.value().equals(value)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }
