@@ -11,6 +11,8 @@ import edu.hawaii.its.api.service.GroupingAssignmentService;
 import edu.hawaii.its.api.service.MemberAttributeService;
 import edu.hawaii.its.api.service.MembershipService;
 
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +21,7 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
@@ -29,8 +32,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -576,43 +578,28 @@ public class GroupingsRestControllerv2_1Test {
     @Test
     @WithMockUhUser
     public void enablePreferenceSyncDestTest() throws Exception {
-        OptRequest optRequest = new OptRequest.Builder()
-                .withUsername(USERNAME)
-                .withPath("grouping")
-                .withOptType(OptType.IN.value())
-                .withIsOptEnable(true)
-                .build();
-        given(groupAttributeService.changeOptStatus(optRequest)).willReturn(gsrListIn());
+        given(groupAttributeService.changeOptStatus(any(OptRequest.class))).willReturn(gsrListIn());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_IN + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
                 .andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print())
+                .andDo(print())
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
+        verify(groupAttributeService, times(1)).changeOptStatus(any(OptRequest.class));
 
-        verify(groupAttributeService, times(1))
-                .changeOptStatus(optRequest);
-
-        optRequest = new OptRequest.Builder()
-                .withUsername(USERNAME)
-                .withPath("grouping")
-                .withOptType(OptType.OUT.value())
-                .withIsOptEnable(true)
-                .build();
-        given(groupAttributeService.changeOptStatus(optRequest))
-                .willReturn(gsrListOut());
+        given(groupAttributeService.changeOptStatus(any(OptRequest.class))).willReturn(gsrListOut());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_OUT + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
-        verify(groupAttributeService, times(1))
-                .changeOptStatus(optRequest);
-
-
+        verify(groupAttributeService, times(2))
+                .changeOptStatus(any(OptRequest.class));
+        
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/sync-destination/" + LISTSERV + "/enable")
