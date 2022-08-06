@@ -14,4 +14,12 @@ public enum GroupType {
     public String value() {
         return value;
     }
+
+    public static String find(OptType optType, OptType givenOptType) {
+        if (optType.equals(givenOptType)) {
+            return INCLUDE.value();
+        } else {
+            return EXCLUDE.value();
+        }
+    }
 }

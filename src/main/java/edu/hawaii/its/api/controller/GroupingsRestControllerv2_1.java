@@ -357,7 +357,7 @@ public class GroupingsRestControllerv2_1 {
                 .body(groupAttributeService.changeOptStatus(new OptRequest.Builder()
                         .withUsername(currentUser)
                         .withPath(path)
-                        .withOptType(OptType.find(id))
+                        .withOptType(id)
                         .withIsOptEnable(true)
                         .build()));
     }
@@ -378,7 +378,7 @@ public class GroupingsRestControllerv2_1 {
                 .body(groupAttributeService.changeOptStatus(new OptRequest.Builder()
                         .withUsername(currentUser)
                         .withPath(path)
-                        .withOptType(OptType.find(id))
+                        .withOptType(id)
                         .withIsOptEnable(false)
                         .build()));
     }

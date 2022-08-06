@@ -116,12 +116,9 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, request.getPathExtension(OptType.IN),
-                request.getIsOptEnable()));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, request.getPathExtension(OptType.OUT),
-                request.getIsOptEnable()));
-        results.add(changeGroupAttributeStatus(request.getPath(), request.getUsername(), request.getOptId(),
-                request.getIsOptEnable()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, request.getOptInPath(), request.getIsOptEnable()));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, request.getOptOutPath(), request.getIsOptEnable()));
+        results.add(changeGroupAttributeStatus(request.getPath(), request.getUsername(), request.getOptId(), request.getIsOptEnable()));
 
         return results;
     }

@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
@@ -578,7 +579,7 @@ public class GroupingsRestControllerv2_1Test {
         OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(USERNAME)
                 .withPath("grouping")
-                .withOptType(OptType.IN)
+                .withOptType(OptType.IN.value())
                 .withIsOptEnable(true)
                 .build();
         given(groupAttributeService.changeOptStatus(optRequest)).willReturn(gsrListIn());
@@ -586,6 +587,7 @@ public class GroupingsRestControllerv2_1Test {
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
                 .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
 
@@ -595,7 +597,7 @@ public class GroupingsRestControllerv2_1Test {
         optRequest = new OptRequest.Builder()
                 .withUsername(USERNAME)
                 .withPath("grouping")
-                .withOptType(OptType.OUT)
+                .withOptType(OptType.OUT.value())
                 .withIsOptEnable(true)
                 .build();
         given(groupAttributeService.changeOptStatus(optRequest))

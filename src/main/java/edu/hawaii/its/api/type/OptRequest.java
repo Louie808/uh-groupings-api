@@ -7,12 +7,16 @@ public final class OptRequest {
     private final Boolean isOptEnable;
     private final String optId;
     private final String path;
+    private final String optInPath;
+    private final String optOutPath;
     private final String username;
 
-    private OptRequest(String optId, Boolean isOptEnable, String path, String username) {
+    private OptRequest(String optId, Boolean isOptEnable, String path, String optInPath, String optOutPath, String username) {
         this.optId = optId;
         this.isOptEnable = isOptEnable;
         this.path = path;
+        this.optInPath = optInPath;
+        this.optOutPath = optOutPath;
         this.username = username;
     }
 
@@ -28,12 +32,12 @@ public final class OptRequest {
         return path;
     }
 
-    public String getPathExtension(OptType optType) {
-        if (optType.equals(OptType.find(optId))) {
-            return path + GroupType.INCLUDE.value();
-        } else {
-            return path + GroupType.EXCLUDE.value();
-        }
+    public String getOptInPath() {
+        return optInPath;
+    }
+
+    public String getOptOutPath() {
+        return optOutPath;
     }
 
     public String getUsername() {
@@ -45,11 +49,17 @@ public final class OptRequest {
         private OptType optType;
         private Boolean isOptEnable;
         private String path;
-        private GroupType groupType;
+        private String optInPath;
+        private String optOutPath;
         private String username;
 
         public Builder withOptType(OptType optType) {
             this.optType = optType;
+            return this;
+        }
+
+        public Builder withOptType(String optId) {
+            this.optType = OptType.find(optId);
             return this;
         }
 
@@ -74,7 +84,10 @@ public final class OptRequest {
             Objects.requireNonNull(path, "path cannot be null.");
             Objects.requireNonNull(username, "username cannot be null.");
 
-            return new OptRequest(optType.value(), isOptEnable, path, username);
+            optInPath = path + GroupType.find(optType, OptType.IN);
+            optOutPath = path + GroupType.find(optType, OptType.OUT);
+
+            return new OptRequest(optType.value(), isOptEnable, path, optInPath, optOutPath, username);
         }
     }
 }

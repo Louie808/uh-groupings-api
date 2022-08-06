@@ -357,8 +357,7 @@ public class TestGroupAttributeService {
                 .withOptType(OptType.OUT)
                 .withIsOptEnable(false)
                 .build();
-        List<GroupingsServiceResult> groupingsServiceResults =
-                groupAttributeService.changeOptStatus(optRequest);
+        List<GroupingsServiceResult> groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         GroupingsServiceResult optOutResult = groupingsServiceResults.get(1);
         assertNotNull(optOutResult);
         assertTrue(optOutResult.getAction().contains(GROUPING_INCLUDE));
