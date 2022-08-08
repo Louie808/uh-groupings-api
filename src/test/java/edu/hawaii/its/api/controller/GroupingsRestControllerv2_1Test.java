@@ -597,9 +597,8 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
-        verify(groupAttributeService, times(2))
-                .changeOptStatus(any(OptRequest.class));
-        
+        verify(groupAttributeService, times(2)).changeOptStatus(any(OptRequest.class));
+
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/sync-destination/" + LISTSERV + "/enable")
