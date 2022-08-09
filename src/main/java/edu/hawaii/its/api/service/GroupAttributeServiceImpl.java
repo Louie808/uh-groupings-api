@@ -117,7 +117,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         List<GroupingsServiceResult> results = new ArrayList<>();
 
         for (OptRequest o : optRequests) {
-            results.add(assignGrouperPrivilege(o.getPrivilege(), o.getPath(), o.getOptValue()));
+            results.add(assignGrouperPrivilege(o.getPrivilegeId(), o.getPath() + o.getGroupId(), o.getOptValue()));
         }
 
         results.add(changeGroupAttributeStatus(statusOptRequest.getPath(),

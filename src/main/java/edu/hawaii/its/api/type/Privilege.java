@@ -1,5 +1,7 @@
 package edu.hawaii.its.api.type;
 
+import org.springframework.security.core.parameters.P;
+
 public enum Privilege {
     IN("optin"),
     OUT("optout");
@@ -12,5 +14,14 @@ public enum Privilege {
 
     public String value() {
         return value;
+    }
+
+    public static Privilege find(String value) {
+        for (OptType type : OptType.values()) {
+            if (type.value().equals(value)) {
+                return Privilege.valueOf(type.name());
+            }
+        }
+        return null;
     }
 }

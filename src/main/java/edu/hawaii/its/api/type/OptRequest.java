@@ -6,13 +6,16 @@ public final class OptRequest {
 
     private final Boolean optValue;
     private final String optId;
-    private final String privilege;
+    private final String privilegeId;
+
+    public final String groupId;
     private final String path;
     private final String username;
 
-    private OptRequest(String optId, String privilege, Boolean optValue, String path, String username) {
+    private OptRequest(String optId, String privilegeId, String groupId, Boolean optValue, String path, String username) {
         this.optId = optId;
-        this.privilege = privilege;
+        this.privilegeId = privilegeId;
+        this.groupId = groupId;
         this.optValue = optValue;
         this.path = path;
         this.username = username;
@@ -22,8 +25,12 @@ public final class OptRequest {
         return optId;
     }
 
-    public String getPrivilege() {
-        return privilege;
+    public String getPrivilegeId() {
+        return privilegeId;
+    }
+
+    public String getGroupId() {
+        return groupId;
     }
 
     public Boolean getOptValue() {
@@ -38,6 +45,7 @@ public final class OptRequest {
         return username;
     }
 
+    /*
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,23 +53,30 @@ public final class OptRequest {
         OptRequest that = (OptRequest) o;
         return Objects.equals(optValue, that.optValue)
                 && Objects.equals(optId, that.optId)
-                && Objects.equals(privilege, that.privilege)
                 && Objects.equals(path, that.path)
                 && Objects.equals(username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(optValue, optId, privilege, path, username);
+        return Objects.hash(optValue, optId, path, username);
     }
+
+     */
 
     public static class Builder {
 
         private OptType optType;
         private Privilege privilege;
+        private GroupType groupType;
         private Boolean optValue;
         private String path;
         private String username;
+
+        public Builder() {
+            this.privilege = Privilege.IN;
+            this.groupType = GroupType.INCLUDE;
+        }
 
         public Builder withOptType(OptType optType) {
             this.optType = optType;
@@ -70,6 +85,11 @@ public final class OptRequest {
 
         public Builder withPrivilege(Privilege privilege) {
             this.privilege = privilege;
+            return this;
+        }
+
+        public Builder withGroupType(GroupType groupType) {
+            this.groupType = groupType;
             return this;
         }
 
@@ -94,16 +114,7 @@ public final class OptRequest {
             Objects.requireNonNull(path, "path cannot be null.");
             Objects.requireNonNull(username, "username cannot be null.");
 
-            String fullPath = path;
-            if (Objects.isNull(privilege)) {
-                privilege = Privilege.IN;
-            } else if (privilege.name().equals(optType.name())) {
-                fullPath += GroupType.INCLUDE.value();
-            } else {
-                fullPath += GroupType.EXCLUDE.value();
-            }
-
-            return new OptRequest(optType.value(), privilege.value(), optValue, fullPath, username);
+            return new OptRequest(optType.value(), privilege.value(), groupType.value(), optValue, path, username);
         }
     }
 }

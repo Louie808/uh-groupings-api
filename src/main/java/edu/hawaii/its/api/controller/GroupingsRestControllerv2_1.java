@@ -363,7 +363,8 @@ public class GroupingsRestControllerv2_1 {
                 .withUsername(currentUser)
                 .withPath(path)
                 .withOptType(OptType.find(id))
-                .withPrivilege(Privilege.IN)
+                .withPrivilege(Privilege.find(id))
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(true)
                 .build();
 
@@ -371,7 +372,8 @@ public class GroupingsRestControllerv2_1 {
                 .withUsername(currentUser)
                 .withPath(path)
                 .withOptType(OptType.find(id))
-                .withPrivilege(Privilege.OUT)
+                .withPrivilege(Privilege.find(id))
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(true)
                 .build();
 

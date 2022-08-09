@@ -207,6 +207,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         OptRequest outOptRequest = new OptRequest.Builder()
@@ -214,6 +215,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         try {
@@ -252,6 +254,7 @@ public class TestGroupAttributeService {
                 .withPath("bogus-path")
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -259,6 +262,7 @@ public class TestGroupAttributeService {
                 .withPath("bogus-path")
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         try {
@@ -280,6 +284,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -287,6 +292,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         List<GroupingsServiceResult> groupingsServiceResults =
@@ -309,6 +315,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(true)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -316,6 +323,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(true)
                 .build();
         groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
@@ -345,6 +353,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -352,6 +361,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
@@ -380,6 +390,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         OptRequest outOptRequest = new OptRequest.Builder()
@@ -387,6 +398,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         try {
@@ -417,6 +429,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -424,6 +437,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
 
@@ -447,6 +461,7 @@ public class TestGroupAttributeService {
                 .withPath("bogus-path")
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -454,6 +469,7 @@ public class TestGroupAttributeService {
                 .withPath("bogus-path")
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         try {
@@ -475,6 +491,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -482,6 +499,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         List<GroupingsServiceResult> groupingsServiceResults =
@@ -504,6 +522,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(true)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -511,6 +530,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(true)
                 .build();
         groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
@@ -540,6 +560,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.IN)
+                .withGroupType(GroupType.EXCLUDE)
                 .withOptValue(false)
                 .build();
         outOptRequest = new OptRequest.Builder()
@@ -547,6 +568,7 @@ public class TestGroupAttributeService {
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
                 .withPrivilege(Privilege.OUT)
+                .withGroupType(GroupType.INCLUDE)
                 .withOptValue(false)
                 .build();
         groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
