@@ -11,8 +11,7 @@ import edu.hawaii.its.api.service.GroupingAssignmentService;
 import edu.hawaii.its.api.service.MemberAttributeService;
 import edu.hawaii.its.api.service.MembershipService;
 
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
@@ -578,17 +575,60 @@ public class GroupingsRestControllerv2_1Test {
     @Test
     @WithMockUhUser
     public void enablePreferenceSyncDestTest() throws Exception {
-        given(groupAttributeService.changeOptStatus(any(OptRequest.class))).willReturn(gsrListIn());
+
+        OptRequest optStatusRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.IN)
+                .withOptValue(false)
+                .build();
+        OptRequest inOptRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.IN)
+                .withPrivilege(Privilege.IN)
+                .withOptValue(false)
+                .build();
+        OptRequest outOptRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.IN)
+                .withPrivilege(Privilege.OUT)
+                .withOptValue(false)
+                .build();
+        given(groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest))
+                .willReturn(gsrListIn());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_IN + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
-        verify(groupAttributeService, times(1)).changeOptStatus(any(OptRequest.class));
+        verify(groupAttributeService, times(1))
+                .changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
 
-        given(groupAttributeService.changeOptStatus(any(OptRequest.class))).willReturn(gsrListOut());
+        optStatusRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.OUT)
+                .withOptValue(false)
+                .build();
+        inOptRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.OUT)
+                .withPrivilege(Privilege.IN)
+                .withOptValue(false)
+                .build();
+       outOptRequest = new OptRequest.Builder()
+                .withUsername(USERNAME)
+                .withPath("grouping")
+                .withOptType(OptType.OUT)
+                .withPrivilege(Privilege.OUT)
+                .withOptValue(false)
+                .build();
+        given(groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest))
+                .willReturn(gsrListOut());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_OUT + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
@@ -597,7 +637,8 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
-        verify(groupAttributeService, times(2)).changeOptStatus(any(OptRequest.class));
+        verify(groupAttributeService, times(1))
+                .changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
 
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());

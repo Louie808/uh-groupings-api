@@ -352,14 +352,32 @@ public class GroupingsRestControllerv2_1 {
             @PathVariable String path,
             @PathVariable String id) {
         logger.info("Entered REST enablePreference");
+        OptRequest optStatusRequest = new OptRequest.Builder()
+                .withUsername(currentUser)
+                .withPath(path)
+                .withOptType(OptType.find(id))
+                .withOptValue(true)
+                .build();
+
+        OptRequest inOptRequest = new OptRequest.Builder()
+                .withUsername(currentUser)
+                .withPath(path)
+                .withOptType(OptType.find(id))
+                .withPrivilege(Privilege.IN)
+                .withOptValue(true)
+                .build();
+
+        OptRequest outOptRequest = new OptRequest.Builder()
+                .withUsername(currentUser)
+                .withPath(path)
+                .withOptType(OptType.find(id))
+                .withPrivilege(Privilege.OUT)
+                .withOptValue(true)
+                .build();
+
         return ResponseEntity
                 .ok()
-                .body(groupAttributeService.changeOptStatus(new OptRequest.Builder()
-                        .withUsername(currentUser)
-                        .withPath(path)
-                        .withOptType(id)
-                        .withIsOptEnable(true)
-                        .build()));
+                .body(groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest));
     }
 
     /**
@@ -378,8 +396,8 @@ public class GroupingsRestControllerv2_1 {
                 .body(groupAttributeService.changeOptStatus(new OptRequest.Builder()
                         .withUsername(currentUser)
                         .withPath(path)
-                        .withOptType(id)
-                        .withIsOptEnable(false)
+                        .withOptType(OptType.find(id))
+                        .withOptValue(false)
                         .build()));
     }
 

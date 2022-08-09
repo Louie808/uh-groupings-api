@@ -110,15 +110,20 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      * Turn the ability for users to opt-in/opt-out to a grouping on or off.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptStatus(OptRequest request) {
+    public List<GroupingsServiceResult> changeOptStatus(OptRequest statusOptRequest, OptRequest... optRequests) {
 
-        checkPrivileges(request.getPath(), request.getUsername());
+        checkPrivileges(statusOptRequest.getPath(), statusOptRequest.getUsername());
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, request.getOptInPath(), request.getIsOptEnable()));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, request.getOptOutPath(), request.getIsOptEnable()));
-        results.add(changeGroupAttributeStatus(request.getPath(), request.getUsername(), request.getOptId(), request.getIsOptEnable()));
+        for (OptRequest o : optRequests) {
+            results.add(assignGrouperPrivilege(o.getPrivilege(), o.getPath(), o.getOptValue()));
+        }
+
+        results.add(changeGroupAttributeStatus(statusOptRequest.getPath(),
+                statusOptRequest.getUsername(),
+                statusOptRequest.getOptId(),
+                statusOptRequest.getOptValue()));
 
         return results;
     }
@@ -177,13 +182,13 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     }
 
     //gives the user the privilege for that group
-    public GroupingsServiceResult assignGrouperPrivilege(String username, String privilegeName, String groupPath,
+    public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupPath,
             boolean isSet) {
 
-        logger.info("assignGrouperPrivilege; username: " + username + "; group: " + groupPath + "; privilegeName: "
+        logger.info("assignGrouperPrivilege; group: " + groupPath + "; privilegeName: "
                 + privilegeName + " set: " + isSet + ";");
-        WsSubjectLookup lookup = grouperApiService.subjectLookup(username);
-        String action = "set " + privilegeName + " " + isSet + " for " + username + " in " + groupPath;
+        WsSubjectLookup lookup = grouperApiService.subjectLookup(EVERY_ENTITY);
+        String action = "set " + privilegeName + " " + isSet + " for " + EVERY_ENTITY + " in " + groupPath;
 
         WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult =
                 grouperApiService.assignGrouperPrivilegesLiteResult(

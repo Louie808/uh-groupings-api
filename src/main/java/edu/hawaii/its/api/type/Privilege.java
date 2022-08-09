@@ -1,13 +1,12 @@
 package edu.hawaii.its.api.type;
 
-public enum GroupType {
-
-    INCLUDE(":include"),
-    EXCLUDE(":exclude");
+public enum Privilege {
+    IN("optin"),
+    OUT("optout");
 
     private final String value;
 
-    GroupType(String value) {
+    Privilege(String value) {
         this.value = value;
     }
 
