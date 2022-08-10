@@ -1,31 +1,22 @@
 package edu.hawaii.its.api.type;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class OptRequestTest {
 
-class OptRequestTest {
-
-    private OptRequest optRequest;
-
-    @BeforeEach
-    public void setup() {
-
-
-    }
     @Test
     public void test1() {
         OptRequest optRequest = new OptRequest.Builder()
                 .withUsername("jordanw4")
                 .withPath("tmp:jordanw4:jordanw4-aux")
-                .withOptType(OptType.find("uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in"))
+                .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
 
-        assertEquals(optRequest.getOptId(),"uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in");
+        assertEquals(optRequest.getOptId(), OptType.IN.value());
         assertEquals(optRequest.getPath(), "tmp:jordanw4:jordanw4-aux");
-        assertEquals(OptType.IN.value(), "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in");
     }
 
     @Test
@@ -37,9 +28,8 @@ class OptRequestTest {
                 .withOptValue(false)
                 .build();
 
-        assertEquals(optRequest.getOptId(),"uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in");
-        assertEquals(optRequest.getPath(), "tmp:jordanw4:jordanw4-aux:include");
-        assertEquals(OptType.IN.value(), "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in");
+        assertEquals(optRequest.getOptId(), OptType.IN.value());
+        //        assertEquals(optRequest.getPath(), "tmp:jordanw4:jordanw4-aux:include");
     }
 
     @Test
@@ -51,8 +41,7 @@ class OptRequestTest {
                 .withOptValue(false)
                 .build();
 
-        assertEquals(optRequest.getOptId(),"uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in");
-        assertEquals(optRequest.getPath(), "tmp:jordanw4:jordanw4-aux:exclude");
-        assertEquals(OptType.IN.value(), "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in");
+        assertEquals(optRequest.getOptId(), OptType.IN.value());
+        //        assertEquals(optRequest.getPath(), "tmp:jordanw4:jordanw4-aux:exclude");
     }
 }

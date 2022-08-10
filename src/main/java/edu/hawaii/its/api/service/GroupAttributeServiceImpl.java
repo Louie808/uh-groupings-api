@@ -1,17 +1,19 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.api.wrapper.AttributeAssignmentsResults;
-
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.OptRequest;
+import edu.hawaii.its.api.type.SyncDestination;
+import edu.hawaii.its.api.wrapper.AttributeAssignmentsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,21 +112,26 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      * Turn the ability for users to opt-in/opt-out to a grouping on or off.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptStatus(OptRequest optRequest) {
+    public List<GroupingsServiceResult> changeOptStatus(OptRequest optInRequest, OptRequest optOutRequest) {
 
-        checkPrivileges(optRequest.getPath(), optRequest.getUsername());
+        checkPrivileges(optInRequest.getPath(), optInRequest.getUsername());
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
-        List<GroupType> groupTypes = optRequest.getGroupTypes();
+        results.add(assignGrouperPrivilege(
+                optInRequest.getPrivilege().value(),
+                optInRequest.getPath() + optInRequest.getGroupTypes().get(0).value(),
+                optInRequest.getOptValue()));
 
-        results.add(assignGrouperPrivilege(PRIVILEGE_OPT_IN, optRequest.getPath() + groupTypes.get(0).value(), optRequest.getOptValue()));
-        results.add(assignGrouperPrivilege(PRIVILEGE_OPT_OUT, optRequest.getPath() + groupTypes.get(1).value(), optRequest.getOptValue()));
+        results.add(assignGrouperPrivilege(
+                optOutRequest.getPrivilege().value(),
+                optOutRequest.getPath() + optOutRequest.getGroupTypes().get(1).value(),
+                optOutRequest.getOptValue()));
 
-        results.add(changeGroupAttributeStatus(optRequest.getPath(),
-                optRequest.getUsername(),
-                optRequest.getOptId(),
-                optRequest.getOptValue()));
+        results.add(changeGroupAttributeStatus(optInRequest.getPath(),
+                optInRequest.getUsername(),
+                optInRequest.getOptId(),
+                optInRequest.getOptValue()));
 
         return results;
     }
@@ -183,6 +190,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     }
 
     //gives the user the privilege for that group
+    @Override
     public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupPath,
             boolean isSet) {
 
@@ -198,11 +206,11 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
                         lookup,
                         isSet);
 
-
         return helperService.makeGroupingsServiceResult(grouperPrivilegesLiteResult, action);
     }
 
     // Updates a Group's description, then passes the Group object to GrouperFactoryService to be saved in Grouper.
+    @Override
     public GroupingsServiceResult updateDescription(String groupPath, String ownerUsername, String description) {
         logger.info("updateDescription(); groupPath:" + groupPath +
                 "; ownerUsername:" + ownerUsername +
