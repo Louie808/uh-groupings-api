@@ -106,6 +106,7 @@ public final class OptRequest {
 
         public OptRequest build() {
             Objects.requireNonNull(optType, "optType cannot be null.");
+            Objects.requireNonNull(groupTypes, "groupTypes cannot be null.");
             Objects.requireNonNull(optValue, "optValue cannot be null.");
             Objects.requireNonNull(groupNameRoot, "groupNameRoot cannot be null.");
             Objects.requireNonNull(username, "username cannot be null.");
