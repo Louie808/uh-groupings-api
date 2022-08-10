@@ -1,21 +1,19 @@
 package edu.hawaii.its.api.type;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class OptRequest {
 
     private final Boolean optValue;
     private final String optId;
-    private final String privilegeId;
-
-    public final String groupId;
+    public final List<GroupType> groupTypes;
     private final String path;
     private final String username;
 
-    private OptRequest(String optId, String privilegeId, String groupId, Boolean optValue, String path, String username) {
+    private OptRequest(String optId, List<GroupType> groupTypes, Boolean optValue, String path, String username) {
         this.optId = optId;
-        this.privilegeId = privilegeId;
-        this.groupId = groupId;
+        this.groupTypes = groupTypes;
         this.optValue = optValue;
         this.path = path;
         this.username = username;
@@ -25,12 +23,8 @@ public final class OptRequest {
         return optId;
     }
 
-    public String getPrivilegeId() {
-        return privilegeId;
-    }
-
-    public String getGroupId() {
-        return groupId;
+    public List<GroupType> getGroupTypes() {
+        return groupTypes;
     }
 
     public Boolean getOptValue() {
@@ -67,29 +61,18 @@ public final class OptRequest {
     public static class Builder {
 
         private OptType optType;
-        private Privilege privilege;
-        private GroupType groupType;
+        private List<GroupType> groupTypes;
         private Boolean optValue;
         private String path;
         private String username;
-
-        public Builder() {
-            this.privilege = Privilege.IN;
-            this.groupType = GroupType.INCLUDE;
-        }
 
         public Builder withOptType(OptType optType) {
             this.optType = optType;
             return this;
         }
 
-        public Builder withPrivilege(Privilege privilege) {
-            this.privilege = privilege;
-            return this;
-        }
-
-        public Builder withGroupType(GroupType groupType) {
-            this.groupType = groupType;
+        public Builder withGroupTypes(List<GroupType> groupTypes) {
+            this.groupTypes = groupTypes;
             return this;
         }
 
@@ -114,7 +97,7 @@ public final class OptRequest {
             Objects.requireNonNull(path, "path cannot be null.");
             Objects.requireNonNull(username, "username cannot be null.");
 
-            return new OptRequest(optType.value(), privilege.value(), groupType.value(), optValue, path, username);
+            return new OptRequest(optType.value(), groupTypes, optValue, path, username);
         }
     }
 }

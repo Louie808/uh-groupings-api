@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -576,59 +577,32 @@ public class GroupingsRestControllerv2_1Test {
     @WithMockUhUser
     public void enablePreferenceSyncDestTest() throws Exception {
 
-        OptRequest optStatusRequest = new OptRequest.Builder()
+        OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(USERNAME)
                 .withPath("grouping")
                 .withOptType(OptType.IN)
+                .withGroupTypes(Arrays.asList(GroupType.INCLUDE, GroupType.EXCLUDE))
                 .withOptValue(false)
                 .build();
-        OptRequest inOptRequest = new OptRequest.Builder()
-                .withUsername(USERNAME)
-                .withPath("grouping")
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
-                .withOptValue(false)
-                .build();
-        OptRequest outOptRequest = new OptRequest.Builder()
-                .withUsername(USERNAME)
-                .withPath("grouping")
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
-                .withOptValue(false)
-                .build();
-        given(groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest))
-                .willReturn(gsrListIn());
+
+        given(groupAttributeService.changeOptStatus(optRequest)).willReturn(gsrListIn());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_IN + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-in"));
-        verify(groupAttributeService, times(1))
-                .changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+        verify(groupAttributeService, times(1)).changeOptStatus(optRequest);
 
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(USERNAME)
                 .withPath("grouping")
                 .withOptType(OptType.OUT)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(USERNAME)
-                .withPath("grouping")
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withOptValue(false)
-                .build();
-       outOptRequest = new OptRequest.Builder()
-                .withUsername(USERNAME)
-                .withPath("grouping")
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withOptValue(false)
-                .build();
-        given(groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest))
-                .willReturn(gsrListOut());
+
+        given(groupAttributeService.changeOptStatus(optRequest)).willReturn(gsrListOut());
         mockMvc.perform(put(API_BASE + "/groupings/grouping/preference/" + OPT_OUT + "/enable")
                         .with(csrf())
                         .header(CURRENT_USER, USERNAME))
@@ -637,8 +611,7 @@ public class GroupingsRestControllerv2_1Test {
                 .andExpect(jsonPath("$[0].resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$[0].action").value("member is opted-out"));
 
-        verify(groupAttributeService, times(1))
-                .changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+        verify(groupAttributeService, times(1)).changeOptStatus(optRequest);
 
         given(groupAttributeService.changeGroupAttributeStatus("grouping", USERNAME, LISTSERV, true))
                 .willReturn(gsrListserv());

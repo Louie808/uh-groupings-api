@@ -17,10 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -196,30 +193,16 @@ public class TestGroupAttributeService {
         iamtst01List.add(iamtst01);
 
         // Should throw an exception if current user is not an owner or and admin.
-        OptRequest optStatusRequest = new OptRequest.Builder()
+        OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
+                .withGroupTypes((Arrays.asList(GroupType.INCLUDE, GroupType.EXCLUDE)))
                 .withOptValue(false)
                 .build();
-        OptRequest inOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
-        OptRequest outOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
+
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
             fail("Should throw an exception if current user is not an owner or and admin.");
         } catch (AccessDeniedException e) {
             assertEquals(INSUFFICIENT_PRIVILEGES, e.getMessage());
@@ -227,7 +210,7 @@ public class TestGroupAttributeService {
         // Should not throw an exception if current user is an owner but not an admin.
         membershipService.addOwnerships(GROUPING, ADMIN, iamtst01List);
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
         } catch (AccessDeniedException e) {
             fail("Should not throw an exception if current user is an owner but not an admin.");
         }
@@ -236,67 +219,38 @@ public class TestGroupAttributeService {
         // Should not throw an exception if current user is an admin but not an owner.
         membershipService.addAdmin(ADMIN, iamtst01);
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
         } catch (AccessDeniedException e) {
             fail("Should not throw an exception if current user is an admin but not an owner.");
         }
         membershipService.removeAdmin(ADMIN, iamtst01);
 
         // Should throw an exception if an invalid path is passed.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withPath("bogus-path")
                 .withOptType(OptType.IN)
+                .withGroupTypes((Arrays.asList(GroupType.INCLUDE, GroupType.EXCLUDE)))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath("bogus-path")
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath("bogus-path")
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
+
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
             fail("Should throw an exception if an invalid path is passed.");
         } catch (GcWebServiceError e) {
             assertTrue(e.getMessage().contains(GROUP_NOT_FOUND));
         }
 
         // Should return resultCode: SUCCESS_NOT_ALLOWED_DIDNT_EXIST if false was set to false.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
+                .withGroupTypes(Arrays.asList(GroupType.INCLUDE, GroupType.EXCLUDE))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        List<GroupingsServiceResult> groupingsServiceResults =
-                groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+
+        List<GroupingsServiceResult> groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         GroupingsServiceResult optInResult = groupingsServiceResults.get(0);
         assertNotNull(optInResult);
         assertTrue(optInResult.getAction().contains(GROUPING_INCLUDE));
@@ -304,29 +258,15 @@ public class TestGroupAttributeService {
         assertEquals(SUCCESS_NOT_ALLOWED_DIDNT_EXIST, optInResult.getResultCode());
 
         // Should return resultCode: SUCCESS_ALLOWED if false was set to true.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
+                .withGroupTypes(Arrays.asList(GroupType.INCLUDE, GroupType.EXCLUDE))
                 .withOptValue(true)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(true)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(true)
-                .build();
-        groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+
+        groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         optInResult = groupingsServiceResults.get(0);
         assertNotNull(optInResult);
         assertTrue(optInResult.getAction().contains(GROUPING_INCLUDE));
@@ -334,7 +274,7 @@ public class TestGroupAttributeService {
         assertEquals(SUCCESS_ALLOWED, optInResult.getResultCode());
 
         // Should return resultCode: SUCCESS_ALLOWED_ALREADY_EXISTED if true was set to true.
-        groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+        groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         optInResult = groupingsServiceResults.get(0);
         assertNotNull(optInResult);
         assertTrue(optInResult.getAction().contains(GROUPING_INCLUDE));
@@ -342,29 +282,15 @@ public class TestGroupAttributeService {
         assertEquals(SUCCESS_ALLOWED_ALREADY_EXISTED, optInResult.getResultCode());
 
         // Should return resultCode: SUCCESS_NOT_ALLOWED if true was set to false.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withPath(GROUPING)
                 .withOptType(OptType.IN)
+                .withGroupTypes(Arrays.asList(GroupType.INCLUDE, GroupType.EXCLUDE))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+
+        groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         optInResult = groupingsServiceResults.get(0);
         assertNotNull(optInResult);
         assertTrue(optInResult.getAction().contains(GROUPING_INCLUDE));
@@ -379,30 +305,16 @@ public class TestGroupAttributeService {
         iamtst01List.add(iamtst01);
 
         // Should throw an exception if current user is not an owner or and admin.
-        OptRequest optStatusRequest = new OptRequest.Builder()
+        OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(false)
                 .build();
-        OptRequest inOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        OptRequest outOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
+
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
             fail("Should throw an exception if current user is not an owner or and admin.");
         } catch (AccessDeniedException e) {
             assertEquals(INSUFFICIENT_PRIVILEGES, e.getMessage());
@@ -411,99 +323,55 @@ public class TestGroupAttributeService {
         // Should not throw an exception if current user is an owner but not an admin.
         membershipService.addOwnerships(GROUPING, ADMIN, iamtst01List);
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
         } catch (AccessDeniedException e) {
             fail("Should not throw an exception if current user is an owner but not an admin.");
         }
         membershipService.removeOwnerships(GROUPING, ADMIN, iamtst01List);
 
         // Should not throw an exception if current user is an admin but not an owner.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
-                .withOptValue(false)
-                .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.INCLUDE)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(false)
                 .build();
 
         membershipService.addAdmin(ADMIN, iamtst01);
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
         } catch (AccessDeniedException e) {
             fail("Should not throw an exception if current user is an admin but not an owner.");
         }
         membershipService.removeAdmin(ADMIN, iamtst01);
 
         // Should throw an exception if an invalid path is passed.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withPath("bogus-path")
                 .withOptType(OptType.OUT)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath("bogus-path")
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(iamtst01)
-                .withPath("bogus-path")
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
+
         try {
-            groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+            groupAttributeService.changeOptStatus(optRequest);
             fail("Should throw an exception if an invalid path is passed.");
         } catch (GcWebServiceError e) {
             assertTrue(e.getMessage().contains(GROUP_NOT_FOUND));
         }
 
         // Should return resultCode: SUCCESS_NOT_ALLOWED_DIDNT_EXIST if false was set to false.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
-        List<GroupingsServiceResult> groupingsServiceResults =
-                groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+
+        List<GroupingsServiceResult> groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         GroupingsServiceResult optOutResult = groupingsServiceResults.get(1);
         assertNotNull(optOutResult);
         assertTrue(optOutResult.getAction().contains(GROUPING_INCLUDE));
@@ -511,29 +379,15 @@ public class TestGroupAttributeService {
         assertEquals(SUCCESS_NOT_ALLOWED_DIDNT_EXIST, optOutResult.getResultCode());
 
         // Should return resultCode: SUCCESS_ALLOWED if false was set to true.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(true)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(true)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(true)
-                .build();
-        groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+
+        groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         optOutResult = groupingsServiceResults.get(1);
         assertNotNull(optOutResult);
         assertTrue(optOutResult.getAction().contains(GROUPING_INCLUDE));
@@ -541,7 +395,7 @@ public class TestGroupAttributeService {
         assertEquals(SUCCESS_ALLOWED, optOutResult.getResultCode());
 
         // Should return resultCode: SUCCESS_ALLOWED_ALREADY_EXISTED if true was set to true.
-        groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+        groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         optOutResult = groupingsServiceResults.get(1);
         assertNotNull(optOutResult);
         assertTrue(optOutResult.getAction().contains(GROUPING_INCLUDE));
@@ -549,29 +403,15 @@ public class TestGroupAttributeService {
         assertEquals(SUCCESS_ALLOWED_ALREADY_EXISTED, optOutResult.getResultCode());
 
         // Should return resultCode: SUCCESS_NOT_ALLOWED if true was set to false.
-        optStatusRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withPath(GROUPING)
                 .withOptType(OptType.OUT)
+                .withGroupTypes(Arrays.asList(GroupType.EXCLUDE, GroupType.INCLUDE))
                 .withOptValue(false)
                 .build();
-        inOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.IN)
-                .withGroupType(GroupType.EXCLUDE)
-                .withOptValue(false)
-                .build();
-        outOptRequest = new OptRequest.Builder()
-                .withUsername(ADMIN)
-                .withPath(GROUPING)
-                .withOptType(OptType.OUT)
-                .withPrivilege(Privilege.OUT)
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(false)
-                .build();
-        groupingsServiceResults = groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest);
+
+        groupingsServiceResults = groupAttributeService.changeOptStatus(optRequest);
         optOutResult = groupingsServiceResults.get(1);
         assertNotNull(optOutResult);
         assertTrue(optOutResult.getAction().contains(GROUPING_INCLUDE));

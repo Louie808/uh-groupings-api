@@ -352,34 +352,17 @@ public class GroupingsRestControllerv2_1 {
             @PathVariable String path,
             @PathVariable String id) {
         logger.info("Entered REST enablePreference");
-        OptRequest optStatusRequest = new OptRequest.Builder()
+        OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(currentUser)
                 .withPath(path)
                 .withOptType(OptType.find(id))
-                .withOptValue(true)
-                .build();
-
-        OptRequest inOptRequest = new OptRequest.Builder()
-                .withUsername(currentUser)
-                .withPath(path)
-                .withOptType(OptType.find(id))
-                .withPrivilege(Privilege.find(id))
-                .withGroupType(GroupType.INCLUDE)
-                .withOptValue(true)
-                .build();
-
-        OptRequest outOptRequest = new OptRequest.Builder()
-                .withUsername(currentUser)
-                .withPath(path)
-                .withOptType(OptType.find(id))
-                .withPrivilege(Privilege.find(id))
-                .withGroupType(GroupType.EXCLUDE)
+                .withGroupTypes(GroupType.find(id))
                 .withOptValue(true)
                 .build();
 
         return ResponseEntity
                 .ok()
-                .body(groupAttributeService.changeOptStatus(optStatusRequest, inOptRequest, outOptRequest));
+                .body(groupAttributeService.changeOptStatus(optRequest));
     }
 
     /**
@@ -393,14 +376,17 @@ public class GroupingsRestControllerv2_1 {
             @PathVariable String path,
             @PathVariable String id) {
         logger.info("Entered REST disablePreference");
+        OptRequest optRequest = new OptRequest.Builder()
+                .withUsername(currentUser)
+                .withPath(path)
+                .withOptType(OptType.find(id))
+                .withGroupTypes(GroupType.find(id))
+                .withOptValue(false)
+                .build();
+
         return ResponseEntity
                 .ok()
-                .body(groupAttributeService.changeOptStatus(new OptRequest.Builder()
-                        .withUsername(currentUser)
-                        .withPath(path)
-                        .withOptType(OptType.find(id))
-                        .withOptValue(false)
-                        .build()));
+                .body(groupAttributeService.changeOptStatus(optRequest));
     }
 
     /**

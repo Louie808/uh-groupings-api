@@ -34,7 +34,6 @@ class OptRequestTest {
                 .withUsername("jordanw4")
                 .withPath("tmp:jordanw4:jordanw4-aux")
                 .withOptType(OptType.IN)
-                .withPrivilege(Privilege.IN)
                 .withOptValue(false)
                 .build();
 
@@ -49,7 +48,6 @@ class OptRequestTest {
                 .withUsername("jordanw4")
                 .withPath("tmp:jordanw4:jordanw4-aux")
                 .withOptType(OptType.IN)
-                .withPrivilege(Privilege.OUT)
                 .withOptValue(false)
                 .build();
 

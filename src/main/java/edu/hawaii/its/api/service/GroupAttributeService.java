@@ -10,7 +10,7 @@ public interface GroupAttributeService {
 
     List<SyncDestination> getSyncDestinations(Grouping grouping);
 
-    List<GroupingsServiceResult> changeOptStatus(OptRequest statusOptRequest, OptRequest... optRequest);
+    List<GroupingsServiceResult> changeOptStatus(OptRequest optRequest);
 
     GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername,
             String attributeName, boolean turnAttributeOn);
