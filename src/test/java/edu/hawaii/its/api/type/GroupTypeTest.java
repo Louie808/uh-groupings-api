@@ -34,3 +34,4 @@ public class GroupTypeTest {
         assertThat(groupType, nullValue());
     }
 }
+

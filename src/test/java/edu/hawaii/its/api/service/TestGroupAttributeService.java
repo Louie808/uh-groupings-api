@@ -200,7 +200,7 @@ public class TestGroupAttributeService {
         iamtst01List.add(iamtst01);
 
         // Should throw an exception if current user is not an owner or and admin.
-        OptRequest optInRequest = new OptRequest.Builder()
+        OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.IN)
@@ -208,7 +208,7 @@ public class TestGroupAttributeService {
                 .build();
 
         try {
-            groupAttributeService.changeOptStatus(optInRequest, null);
+            groupAttributeService.changeOptStatus(optRequest, null);
             fail("Should throw an exception if current user is not an owner or and admin.");
         } catch (AccessDeniedException e) {
             assertEquals(INSUFFICIENT_PRIVILEGES, e.getMessage());
@@ -216,7 +216,7 @@ public class TestGroupAttributeService {
         // Should not throw an exception if current user is an owner but not an admin.
         membershipService.addOwnerships(GROUPING, ADMIN, iamtst01List);
         try {
-            groupAttributeService.changeOptStatus(optInRequest, null);
+            groupAttributeService.changeOptStatus(optRequest, null);
         } catch (AccessDeniedException e) {
             fail("Should not throw an exception if current user is an owner but not an admin.");
         }
@@ -225,14 +225,14 @@ public class TestGroupAttributeService {
         // Should not throw an exception if current user is an admin but not an owner.
         membershipService.addAdmin(ADMIN, iamtst01);
         try {
-            groupAttributeService.changeOptStatus(optInRequest, null);
+            groupAttributeService.changeOptStatus(optRequest, null);
         } catch (AccessDeniedException e) {
             fail("Should not throw an exception if current user is an admin but not an owner.");
         }
         membershipService.removeAdmin(ADMIN, iamtst01);
 
         // Should throw an exception if an invalid path is passed.
-        OptRequest optRequest = new OptRequest.Builder()
+        optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot("bogus-path")
                 .withOptType(OptType.IN)

@@ -6,6 +6,7 @@ public enum PrivilegeType {
     OUT("optout"),
     UNDEFINED("");
 
+
     private final String value;
 
     PrivilegeType(String value) {

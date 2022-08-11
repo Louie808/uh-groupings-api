@@ -42,3 +42,4 @@ public class OptTypeTest {
         assertThat(optType, nullValue());
     }
 }
+

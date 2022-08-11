@@ -387,9 +387,6 @@ public class GroupingsRestControllerv2_1 {
                 .body(groupAttributeService.changeOptStatus(optInRequest, optOutRequest));
     }
 
-    /**
-     * Update grouping to disable given preference.
-     */
     @RequestMapping(value = "/groupings/{path:[\\w-:.]+}/preference/{id:[\\w-:.]+}/disable",
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
