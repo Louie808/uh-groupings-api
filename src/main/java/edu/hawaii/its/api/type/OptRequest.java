@@ -8,26 +8,38 @@ public final class OptRequest {
 
     private final Boolean optValue;
     private final String optId;
-    public final List<GroupType> groupTypes;
+    private final List<GroupType> groupTypes;
+    private final GroupType groupType;
     private final String path;
     private final PrivilegeType privilege;
     private final String username;
 
-    private OptRequest(String optId, List<GroupType> groupTypes, Boolean optValue, String path, String username, PrivilegeType privilege) {
+    private OptRequest(String optId,
+            List<GroupType> groupTypes,
+            GroupType groupType,
+            Boolean optValue,
+            String path,
+            String username,
+            PrivilegeType privilege) {
         this.optId = optId;
         this.groupTypes = groupTypes;
+        this.groupType = groupType;
         this.optValue = optValue;
         this.path = path;
-        this.privilege = privilege;
         this.username = username;
+        this.privilege = privilege;
     }
 
     public String getOptId() {
         return optId;
     }
 
-    public List<GroupType> getGroupTypes() {
+    private List<GroupType> getGroupTypes() {
         return groupTypes;
+    }
+
+    public GroupType getGroupType() {
+        return groupType;
     }
 
     public Boolean getOptValue() {
@@ -71,6 +83,7 @@ public final class OptRequest {
 
         private OptType optType;
         private List<GroupType> groupTypes;
+        private GroupType groupType;
         private Boolean optValue;
         private String path;
         private PrivilegeType privilege;
@@ -108,20 +121,35 @@ public final class OptRequest {
             Objects.requireNonNull(privilege, "privilege cannot be null.");
             Objects.requireNonNull(username, "username cannot be null.");
 
+            switch (privilege) {
+                case IN:
+                    groupType = optValue ? GroupType.EXCLUDE : GroupType.INCLUDE;
+                    break;
+                case OUT:
+                    groupType = optValue ? GroupType.INCLUDE : GroupType.EXCLUDE;
+                    break;
+                default:
+                    groupType = GroupType.EXCLUDE;
+            }
+
             groupTypes = new ArrayList<>();
             switch (optType) {
                 case IN:
                     groupTypes.add(GroupType.INCLUDE);
                     groupTypes.add(GroupType.EXCLUDE);
+
                     break;
 
                 case OUT:
                     groupTypes.add(GroupType.EXCLUDE);
                     groupTypes.add(GroupType.INCLUDE);
                     break;
+                default:
+                    // Emtpy.
+                    break;
             }
 
-            return new OptRequest(optType.value(), groupTypes, optValue, path, username, privilege);
+            return new OptRequest(optType.value(), groupTypes, groupType, optValue, path, username, privilege);
         }
     }
 }

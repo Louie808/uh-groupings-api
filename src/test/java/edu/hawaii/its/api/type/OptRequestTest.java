@@ -26,6 +26,8 @@ public class OptRequestTest {
         assertEquals(optRequest.getOptId(), OptType.IN.value());
         assertThat(optRequest.getOptId(), equalTo(OptType.IN.value()));
         assertThat(optRequest.getPath(), equalTo("tmp:jordanw4:jordanw4-aux"));
+        assertThat(optRequest.getGroupType(), notNullValue());
+        assertThat(optRequest.getGroupType(), equalTo(GroupType.INCLUDE));
     }
 
     @Test
@@ -42,10 +44,11 @@ public class OptRequestTest {
         assertEquals(optRequest.getOptId(), OptType.OUT.value());
         assertThat(optRequest.getOptId(), equalTo(OptType.OUT.value()));
         assertThat(optRequest.getPath(), equalTo("tmp:jordanw4:jordanw4-aux"));
-        assertThat(optRequest.getGroupTypes(), notNullValue());
         assertThat(optRequest.getOptValue(), notNullValue());
         assertThat(optRequest.getPrivilege(), notNullValue());
         assertThat(optRequest.getUsername(), notNullValue());
+        assertThat(optRequest.getGroupType(), notNullValue());
+        assertThat(optRequest.getGroupType(), equalTo(GroupType.INCLUDE));
     }
 
     @Test
