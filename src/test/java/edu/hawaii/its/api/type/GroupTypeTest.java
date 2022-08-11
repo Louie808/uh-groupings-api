@@ -32,6 +32,5 @@ public class GroupTypeTest {
         String badValue = "what?";
         GroupType groupType = GroupType.find(badValue);
         assertThat(groupType, nullValue());
-
     }
 }

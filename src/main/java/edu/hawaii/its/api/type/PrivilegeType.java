@@ -1,13 +1,13 @@
 package edu.hawaii.its.api.type;
 
-public enum Privilege {
+public enum PrivilegeType {
 
     IN("optin"),
     OUT("optout");
 
     private final String value;
 
-    Privilege(String value) {
+    PrivilegeType(String value) {
         this.value = value;
     }
 
@@ -15,8 +15,8 @@ public enum Privilege {
         return value;
     }
 
-    public static Privilege find(String value) {
-        for (Privilege type : Privilege.values()) {
+    public static PrivilegeType find(String value) {
+        for (PrivilegeType type : PrivilegeType.values()) {
             if (type.value().equals(value)) {
                 return type;
             }

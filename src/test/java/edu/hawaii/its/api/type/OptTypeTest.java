@@ -40,6 +40,5 @@ public class OptTypeTest {
         String badValue = "what?";
         OptType optType = OptType.find(badValue);
         assertThat(optType, nullValue());
-
     }
 }

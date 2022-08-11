@@ -10,10 +10,10 @@ public final class OptRequest {
     private final String optId;
     public final List<GroupType> groupTypes;
     private final String path;
-    private final Privilege privilege;
+    private final PrivilegeType privilege;
     private final String username;
 
-    private OptRequest(String optId, List<GroupType> groupTypes, Boolean optValue, String path, String username, Privilege privilege) {
+    private OptRequest(String optId, List<GroupType> groupTypes, Boolean optValue, String path, String username, PrivilegeType privilege) {
         this.optId = optId;
         this.groupTypes = groupTypes;
         this.optValue = optValue;
@@ -38,7 +38,7 @@ public final class OptRequest {
         return path;
     }
 
-    public Privilege getPrivilege() {
+    public PrivilegeType getPrivilege() {
         return privilege;
     }
 
@@ -73,7 +73,7 @@ public final class OptRequest {
         private List<GroupType> groupTypes;
         private Boolean optValue;
         private String path;
-        private Privilege privilege;
+        private PrivilegeType privilege;
         private String username;
 
         public Builder withOptType(OptType optType) {
@@ -91,7 +91,7 @@ public final class OptRequest {
             return this;
         }
 
-        public Builder withPrivilege(Privilege privilege) {
+        public Builder withPrivilege(PrivilegeType privilege) {
             this.privilege = privilege;
             return this;
         }
