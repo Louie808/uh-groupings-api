@@ -119,13 +119,13 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         List<GroupingsServiceResult> results = new ArrayList<>();
 
         results.add(assignGrouperPrivilege(
-                optInRequest.getPrivilege().value(),
-                optInRequest.getPath() + optInRequest.getGroupType().value(),
-                optInRequest.getOptValue()));
+                optInRequest.getPrivilege().value(),           // privilegeName --> dddd
+                optInRequest.getPathFull(),                    // groupPath --> groupName
+                optInRequest.getOptValue()));                  // isSet --> isAllowed
 
         results.add(assignGrouperPrivilege(
                 optOutRequest.getPrivilege().value(),
-                optOutRequest.getPath() + optOutRequest.getGroupType().value(),
+                optOutRequest.getPathFull(),
                 optOutRequest.getOptValue()));
 
         results.add(changeGroupAttributeStatus(optInRequest.getPath(),
@@ -191,11 +191,12 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
 
     //gives the user the privilege for that group
     @Override
-    public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupPath,
-            boolean isSet) {
+    public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupPath, boolean isSet) {
 
-        logger.info("assignGrouperPrivilege; group: " + groupPath + "; privilegeName: "
-                + privilegeName + " set: " + isSet + ";");
+        logger.info("assignGrouperPrivilege; group: " + groupPath
+                + "; privilegeName: " + privilegeName
+                + " set: " + isSet + ";");
+
         WsSubjectLookup lookup = grouperApiService.subjectLookup(EVERY_ENTITY);
         String action = "set " + privilegeName + " " + isSet + " for " + EVERY_ENTITY + " in " + groupPath;
 
