@@ -114,21 +114,21 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Override
     public List<GroupingsServiceResult> changeOptStatus(OptRequest optInRequest, OptRequest optOutRequest) {
 
-        checkPrivileges(optInRequest.getPath(), optInRequest.getUsername());
+        checkPrivileges(optInRequest.getGroupNameRoot(), optInRequest.getUsername());
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
         results.add(assignGrouperPrivilege(
-                optInRequest.getPrivilege().value(),           // privilegeName --> dddd
-                optInRequest.getPathFull(),                    // groupPath --> groupName
-                optInRequest.getOptValue()));                  // isSet --> isAllowed
+                optInRequest.getPrivilege().value(),
+                optInRequest.getGroupName(),
+                optInRequest.getOptValue()));
 
         results.add(assignGrouperPrivilege(
                 optOutRequest.getPrivilege().value(),
-                optOutRequest.getPathFull(),
+                optOutRequest.getGroupName(),
                 optOutRequest.getOptValue()));
 
-        results.add(changeGroupAttributeStatus(optInRequest.getPath(),
+        results.add(changeGroupAttributeStatus(optInRequest.getGroupNameRoot(),
                 optInRequest.getUsername(),
                 optInRequest.getOptId(),
                 optInRequest.getOptValue()));
@@ -150,6 +150,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         if (turnAttributeOn) {
             verb = "added to ";
         }
+
         String action = attributeName + " has been " + verb + groupPath + " by " + ownerUsername;
         boolean isHasAttribute = isGroupAttribute(groupPath, attributeName);
 
@@ -189,20 +190,19 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         return attributeAssignmentsResults.isAttributeDefName(attributeName);
     }
 
-    //gives the user the privilege for that group
     @Override
-    public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupPath, boolean isSet) {
+    public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupName, boolean isSet) {
 
-        logger.info("assignGrouperPrivilege; group: " + groupPath
+        logger.info("assignGrouperPrivilege; group: " + groupName
                 + "; privilegeName: " + privilegeName
                 + " set: " + isSet + ";");
 
         WsSubjectLookup lookup = grouperApiService.subjectLookup(EVERY_ENTITY);
-        String action = "set " + privilegeName + " " + isSet + " for " + EVERY_ENTITY + " in " + groupPath;
+        String action = "set " + privilegeName + " " + isSet + " for " + EVERY_ENTITY + " in " + groupName;
 
         WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult =
                 grouperApiService.assignGrouperPrivilegesLiteResult(
-                        groupPath,
+                        groupName,
                         privilegeName,
                         lookup,
                         isSet);
@@ -230,8 +230,8 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
 
     //TODO: Move both checkPrivileges helper methods to the Governor class once it's built
     private void checkPrivileges(String groupingPath, String ownerUsername) {
-        if (!memberAttributeService.isOwner(groupingPath, ownerUsername) && !memberAttributeService.isAdmin(
-                ownerUsername)) {
+        if (!memberAttributeService.isOwner(groupingPath, ownerUsername)
+                && !memberAttributeService.isAdmin(ownerUsername)) {
             throw new AccessDeniedException(INSUFFICIENT_PRIVILEGES);
         }
     }

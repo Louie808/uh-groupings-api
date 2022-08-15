@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,26 +16,24 @@ public class OptRequestTest {
     @Test
     public void optTypeInIn() {
         OptRequest optRequest = new OptRequest.Builder()
-                .withUsername("jordanw4")
-                .withPath("tmp:jordanw4:jordanw4-aux")
+                .withUsername("yoda")
+                .withGroupNameRoot("t:yoda:yoda-aux")
                 .withPrivilege(PrivilegeType.IN)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
 
         assertEquals(optRequest, optRequest);
-        assertEquals(optRequest.getOptId(), OptType.IN.value());
         assertThat(optRequest.getOptId(), equalTo(OptType.IN.value()));
-        //        assertThat(optRequest.getPath(), equalTo("tmp:jordanw4:jordanw4-aux"));
-        assertThat(optRequest.getGroupType(), notNullValue());
-        assertThat(optRequest.getGroupType(), equalTo(GroupType.INCLUDE));
+        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:include"));
+        assertThat(optRequest.getGroupNameRoot(), equalTo("t:yoda:yoda-aux"));
     }
 
     @Test
     public void optTypeInOut() {
         OptRequest optRequest = new OptRequest.Builder()
-                .withUsername("jordanw4")
-                .withPath("tmp:jordanw4:jordanw4-aux")
+                .withUsername("yoda")
+                .withGroupNameRoot("t:yoda:yoda-aux")
                 .withPrivilege(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
@@ -43,12 +42,163 @@ public class OptRequestTest {
         assertEquals(optRequest, optRequest);
         assertEquals(optRequest.getOptId(), OptType.OUT.value());
         assertThat(optRequest.getOptId(), equalTo(OptType.OUT.value()));
-        //        assertThat(optRequest.getPath(), equalTo("tmp:jordanw4:jordanw4-aux"));
+        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:include"));
+        assertThat(optRequest.getGroupNameRoot(), equalTo("t:yoda:yoda-aux"));
         assertThat(optRequest.getOptValue(), notNullValue());
         assertThat(optRequest.getPrivilege(), notNullValue());
         assertThat(optRequest.getUsername(), notNullValue());
-        assertThat(optRequest.getGroupType(), notNullValue());
-        assertThat(optRequest.getGroupType(), equalTo(GroupType.INCLUDE));
+    }
+
+    @Test
+    public void optTypeOutIn() {
+        OptRequest optRequest = new OptRequest.Builder()
+                .withUsername("yoda")
+                .withGroupNameRoot("t:yoda:yoda-aux")
+                .withPrivilege(PrivilegeType.OUT)
+                .withOptType(OptType.IN)
+                .withOptValue(false)
+                .build();
+
+        assertEquals(optRequest, optRequest);
+        assertThat(optRequest.getOptId(), equalTo(OptType.IN.value()));
+        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:exclude"));
+        assertThat(optRequest.getGroupNameRoot(), equalTo("t:yoda:yoda-aux"));
+    }
+
+    @Test
+    public void optTypeOutOut() {
+        OptRequest optRequest = new OptRequest.Builder()
+                .withUsername("yoda")
+                .withGroupNameRoot("t:yoda:yoda-aux")
+                .withPrivilege(PrivilegeType.OUT)
+                .withOptType(OptType.OUT)
+                .withOptValue(false)
+                .build();
+
+        assertEquals(optRequest, optRequest);
+        assertThat(optRequest.getOptId(), equalTo(OptType.OUT.value()));
+        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:exclude"));
+        assertThat(optRequest.getGroupNameRoot(), equalTo("t:yoda:yoda-aux"));
+    }
+
+    /*
+        public OptRequest build() {
+            Objects.requireNonNull(optType, "optType cannot be null.");
+            Objects.requireNonNull(optValue, "optValue cannot be null.");
+            Objects.requireNonNull(groupNameRoot, "groupNameRoot cannot be null.");
+            Objects.requireNonNull(username, "username cannot be null.");
+    
+            switch (privilege) {
+                case IN:
+                    groupType = optValue ? GroupType.EXCLUDE : GroupType.INCLUDE;
+                    break;
+                case OUT:
+                    groupType = optValue ? GroupType.INCLUDE : GroupType.EXCLUDE;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown PrivilegeType.");
+    
+            }
+    
+            return new OptRequest(optType, groupType, optValue, groupNameRoot, username, privilege);
+        }    
+    */
+
+    @Test
+    public void build() {
+        Exception exception = assertThrows(NullPointerException.class,
+                () -> new OptRequest.Builder()
+                        .build());
+        String expectedMessage = "optType cannot be null.";
+        String actualMessage = exception.getMessage();
+        assertThat(actualMessage, equalTo(expectedMessage));
+
+        exception = assertThrows(NullPointerException.class,
+                () -> new OptRequest.Builder()
+                        .withOptType(OptType.OUT)
+                        .build());
+        expectedMessage = "optValue cannot be null.";
+        actualMessage = exception.getMessage();
+        assertThat(actualMessage, equalTo(expectedMessage));
+
+        exception = assertThrows(NullPointerException.class,
+                () -> new OptRequest.Builder()
+                        .withOptType(OptType.OUT)
+                        .withOptValue(Boolean.TRUE)
+                        .build());
+        expectedMessage = "groupNameRoot cannot be null.";
+        actualMessage = exception.getMessage();
+        assertThat(actualMessage, equalTo(expectedMessage));
+
+        exception = assertThrows(NullPointerException.class,
+                () -> new OptRequest.Builder()
+                        .withOptType(OptType.OUT)
+                        .withOptValue(Boolean.TRUE)
+                        .withGroupNameRoot("some:root")
+                        .build());
+        expectedMessage = "username cannot be null.";
+        actualMessage = exception.getMessage();
+        assertThat(actualMessage, equalTo(expectedMessage));
+
+        exception = assertThrows(NullPointerException.class,
+                () -> new OptRequest.Builder()
+                        .withOptType(OptType.OUT)
+                        .withOptValue(Boolean.TRUE)
+                        .withGroupNameRoot("some:root")
+                        .withUsername("hansolo")
+                        .build());
+        expectedMessage = "privilege cannot be null.";
+        actualMessage = exception.getMessage();
+        assertThat(actualMessage, equalTo(expectedMessage));
+
+        exception = assertThrows(IllegalArgumentException.class,
+                () -> new OptRequest.Builder()
+                        .withOptType(OptType.OUT)
+                        .withOptValue(Boolean.TRUE)
+                        .withGroupNameRoot("some:root")
+                        .withUsername("hansolo")
+                        .withPrivilege(PrivilegeType.find("no-way"))
+                        .build());
+        expectedMessage = "Invalid PrivilegeType: UNDEFINED";
+        actualMessage = exception.getMessage();
+        assertThat(actualMessage, equalTo(expectedMessage));
+
+        OptRequest optRequest = new OptRequest.Builder()
+                .withOptType(OptType.OUT)
+                .withOptValue(Boolean.TRUE)
+                .withGroupNameRoot("some:root")
+                .withUsername("hansolo")
+                .withPrivilege(PrivilegeType.IN)
+                .build();
+        assertThat(optRequest, notNullValue());
+
+        optRequest = new OptRequest.Builder()
+                .withOptType(OptType.OUT)
+                .withOptValue(Boolean.TRUE)
+                .withGroupNameRoot("some:root")
+                .withUsername("hansolo")
+                .withPrivilege(PrivilegeType.OUT)
+                .build();
+        assertThat(optRequest, notNullValue());
+
+        //        OptRequest optRequest = new OptRequest.Builder()
+        //                .withOptType(OptType.OUT)
+        //                .withOptValue(Boolean.TRUE)
+        //                .withGroupNameRoot("some:root")
+        //                .build();
+        //        assertThat(optRequest, notNullValue());
+
+        //        try {
+        //            new OptRequest.Builder()
+        //                    .withOptType(OptType.OUT)
+        //                    .withOptValue(Boolean.TRUE)
+        //                    .withGroupNameRoot("some:root")
+        //                    .withUsername("hansolo")
+        //                    .build();
+        //        } catch (Exception e) {
+        //            e.printStackTrace();
+        //        }
+
     }
 
     @Test
@@ -56,7 +206,7 @@ public class OptRequestTest {
         OptRequest optRequestOne = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -65,7 +215,7 @@ public class OptRequestTest {
         OptRequest optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -79,7 +229,7 @@ public class OptRequestTest {
         OptRequest optRequestOne = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -89,7 +239,7 @@ public class OptRequestTest {
         OptRequest optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -103,7 +253,7 @@ public class OptRequestTest {
         optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.OUT)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -114,7 +264,7 @@ public class OptRequestTest {
         optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(false)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -125,7 +275,7 @@ public class OptRequestTest {
         optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-pathX")
+                .withGroupNameRoot("some-pathX")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("username")
                 .build();
@@ -136,7 +286,7 @@ public class OptRequestTest {
         optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.OUT)
                 .withUsername("username")
                 .build();
@@ -147,7 +297,7 @@ public class OptRequestTest {
         optRequestTwo = new OptRequest.Builder()
                 .withOptType(OptType.IN)
                 .withOptValue(true)
-                .withPath("some-path")
+                .withGroupNameRoot("some-path")
                 .withPrivilege(PrivilegeType.IN)
                 .withUsername("usernameX")
                 .build();

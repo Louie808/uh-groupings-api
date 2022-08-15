@@ -1,28 +1,26 @@
 package edu.hawaii.its.api.type;
 
-import java.util.List;
 import java.util.Objects;
 
 public final class OptRequest {
 
+    private final String groupNameRoot;
+    private final GroupType groupType;
     private final Boolean optValue;
     private final String optId;
-    private final GroupType groupType;
-    private final String pathBase;
     private final PrivilegeType privilege;
     private final String username;
 
-    private OptRequest(String optId,
-            List<GroupType> groupTypes,
+    private OptRequest(OptType optType,
             GroupType groupType,
             Boolean optValue,
-            String pathBase,
+            String groupNameRoot,
             String username,
             PrivilegeType privilege) {
-        this.optId = optId;
+        this.optId = optType.value();
         this.groupType = groupType;
         this.optValue = optValue;
-        this.pathBase = pathBase;
+        this.groupNameRoot = groupNameRoot;
         this.username = username;
         this.privilege = privilege;
     }
@@ -31,20 +29,16 @@ public final class OptRequest {
         return optId;
     }
 
-    public GroupType getGroupType() {
-        return groupType;
-    }
-
     public Boolean getOptValue() {
         return optValue;
     }
 
-    public String getPath() {
-        return pathBase;
+    public String getGroupNameRoot() {
+        return groupNameRoot;
     }
 
-    public String getPathFull() {
-        return pathBase + groupType.value();
+    public String getGroupName() {
+        return groupNameRoot + groupType.value();
     }
 
     public PrivilegeType getPrivilege() {
@@ -57,7 +51,7 @@ public final class OptRequest {
 
     @Override
     public int hashCode() {
-        return Objects.hash(optId, optValue, pathBase, privilege, username);
+        return Objects.hash(optId, optValue, groupNameRoot, privilege, username);
     }
 
     @Override
@@ -71,18 +65,17 @@ public final class OptRequest {
         OptRequest other = (OptRequest) obj;
         return Objects.equals(optId, other.optId)
                 && Objects.equals(optValue, other.optValue)
-                && Objects.equals(pathBase, other.pathBase)
+                && Objects.equals(groupNameRoot, other.groupNameRoot)
                 && Objects.equals(privilege, other.privilege)
                 && Objects.equals(username, other.username);
     }
 
     public static class Builder {
 
-        private OptType optType;
-        private List<GroupType> groupTypes;
+        private String groupNameRoot;
         private GroupType groupType;
+        private OptType optType;
         private Boolean optValue;
-        private String pathBase;
         private PrivilegeType privilege;
         private String username;
 
@@ -96,8 +89,8 @@ public final class OptRequest {
             return this;
         }
 
-        public Builder withPath(String path) {
-            this.pathBase = path;
+        public Builder withGroupNameRoot(String groupNameRoot) {
+            this.groupNameRoot = groupNameRoot;
             return this;
         }
 
@@ -114,9 +107,9 @@ public final class OptRequest {
         public OptRequest build() {
             Objects.requireNonNull(optType, "optType cannot be null.");
             Objects.requireNonNull(optValue, "optValue cannot be null.");
-            Objects.requireNonNull(pathBase, "path cannot be null.");
-            Objects.requireNonNull(privilege, "privilege cannot be null.");
+            Objects.requireNonNull(groupNameRoot, "groupNameRoot cannot be null.");
             Objects.requireNonNull(username, "username cannot be null.");
+            Objects.requireNonNull(privilege, "privilege cannot be null.");
 
             switch (privilege) {
                 case IN:
@@ -126,10 +119,11 @@ public final class OptRequest {
                     groupType = optValue ? GroupType.INCLUDE : GroupType.EXCLUDE;
                     break;
                 default:
-                    groupType = GroupType.EXCLUDE;
+                    throw new IllegalArgumentException("Invalid PrivilegeType: " + privilege);
+
             }
 
-            return new OptRequest(optType.value(), groupTypes, groupType, optValue, pathBase, username, privilege);
+            return new OptRequest(optType, groupType, optValue, groupNameRoot, username, privilege);
         }
     }
 }

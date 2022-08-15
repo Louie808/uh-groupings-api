@@ -202,7 +202,7 @@ public class TestGroupAttributeService {
         // Should throw an exception if current user is not an owner or and admin.
         OptRequest optInRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -234,7 +234,7 @@ public class TestGroupAttributeService {
         // Should throw an exception if an invalid path is passed.
         OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
-                .withPath("bogus-path")
+                .withGroupNameRoot("bogus-path")
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -249,7 +249,7 @@ public class TestGroupAttributeService {
         // Should return resultCode: SUCCESS_NOT_ALLOWED_DIDNT_EXIST if false was set to false.
         optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -264,7 +264,7 @@ public class TestGroupAttributeService {
         // Should return resultCode: SUCCESS_ALLOWED if false was set to true.
         optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.IN)
                 .withOptValue(true)
                 .build();
@@ -287,7 +287,7 @@ public class TestGroupAttributeService {
         // Should return resultCode: SUCCESS_NOT_ALLOWED if true was set to false.
         optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -309,7 +309,7 @@ public class TestGroupAttributeService {
         // Should throw an exception if current user is not an owner or and admin.
         OptRequest optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -333,7 +333,7 @@ public class TestGroupAttributeService {
         // Should not throw an exception if current user is an admin but not an owner.
         optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -349,7 +349,7 @@ public class TestGroupAttributeService {
         // Should throw an exception if an invalid path is passed.
         optRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
-                .withPath("bogus-path")
+                .withGroupNameRoot("bogus-path")
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -364,7 +364,7 @@ public class TestGroupAttributeService {
         // Should return resultCode: SUCCESS_NOT_ALLOWED_DIDNT_EXIST if false was set to false.
         optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -379,7 +379,7 @@ public class TestGroupAttributeService {
         // Should return resultCode: SUCCESS_ALLOWED if false was set to true.
         optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.OUT)
                 .withOptValue(true)
                 .build();
@@ -402,7 +402,7 @@ public class TestGroupAttributeService {
         // Should return resultCode: SUCCESS_NOT_ALLOWED if true was set to false.
         optRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
-                .withPath(GROUPING)
+                .withGroupNameRoot(GROUPING)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
