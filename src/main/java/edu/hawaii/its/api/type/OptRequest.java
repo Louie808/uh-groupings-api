@@ -99,11 +99,6 @@ public final class OptRequest {
             return this;
         }
 
-        public Builder withPrivilegeType(PrivilegeType privilege) {
-            this.privilege = privilege;
-            return this;
-        }
-
         public Builder withUsername(String username) {
             this.username = username;
             return this;
@@ -116,17 +111,29 @@ public final class OptRequest {
             Objects.requireNonNull(username, "username cannot be null.");
             Objects.requireNonNull(privilege, "privilege cannot be null.");
 
+            /*
             switch (privilege) {
                 case IN:
-                    groupType = optValue ? GroupType.EXCLUDE : GroupType.INCLUDE;
+                    groupType = optValue ? GroupType.INCLUDE : GroupType.EXCLUDE;
                     break;
                 case OUT:
-                    groupType = optValue ? GroupType.INCLUDE : GroupType.EXCLUDE;
+                    groupType = optValue ? GroupType.EXCLUDE : GroupType.INCLUDE;
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid PrivilegeType: " + privilege);
-
             }
+             */
+
+            //groupType = privilege.name().equals(optType.name()) ? GroupType.INCLUDE : GroupType.EXCLUDE;
+
+            if (privilege == privilege.IN && optType == optType.IN) {
+                groupType = GroupType.INCLUDE;
+            } else if (privilege == privilege.OUT && optType == optType.OUT){
+                groupType = GroupType.INCLUDE;
+            } else {
+                groupType = GroupType.EXCLUDE;
+            }
+
             return new OptRequest(optType, groupType, optValue, groupNameRoot, username, privilege);
         }
     }

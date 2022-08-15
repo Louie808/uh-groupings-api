@@ -42,7 +42,7 @@ public class OptRequestTest {
         assertEquals(optRequest, optRequest);
         assertEquals(optRequest.getOptId(), OptType.OUT.value());
         assertThat(optRequest.getOptId(), equalTo(OptType.OUT.value()));
-        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:include"));
+        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:exclude"));
         assertThat(optRequest.getGroupNameRoot(), equalTo("t:yoda:yoda-aux"));
         assertThat(optRequest.getOptValue(), notNullValue());
         assertThat(optRequest.getPrivilege(), notNullValue());
@@ -77,32 +77,9 @@ public class OptRequestTest {
 
         assertEquals(optRequest, optRequest);
         assertThat(optRequest.getOptId(), equalTo(OptType.OUT.value()));
-        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:exclude"));
+        assertThat(optRequest.getGroupName(), equalTo("t:yoda:yoda-aux:include"));
         assertThat(optRequest.getGroupNameRoot(), equalTo("t:yoda:yoda-aux"));
     }
-
-    /*
-        public OptRequest build() {
-            Objects.requireNonNull(optType, "optType cannot be null.");
-            Objects.requireNonNull(optValue, "optValue cannot be null.");
-            Objects.requireNonNull(groupNameRoot, "groupNameRoot cannot be null.");
-            Objects.requireNonNull(username, "username cannot be null.");
-    
-            switch (privilege) {
-                case IN:
-                    groupType = optValue ? GroupType.EXCLUDE : GroupType.INCLUDE;
-                    break;
-                case OUT:
-                    groupType = optValue ? GroupType.INCLUDE : GroupType.EXCLUDE;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown PrivilegeType.");
-    
-            }
-    
-            return new OptRequest(optType, groupType, optValue, groupNameRoot, username, privilege);
-        }    
-    */
 
     @Test
     public void build() {
@@ -151,6 +128,7 @@ public class OptRequestTest {
         actualMessage = exception.getMessage();
         assertThat(actualMessage, equalTo(expectedMessage));
 
+        /*
         exception = assertThrows(IllegalArgumentException.class,
                 () -> new OptRequest.Builder()
                         .withOptType(OptType.OUT)
@@ -162,6 +140,7 @@ public class OptRequestTest {
         expectedMessage = "Invalid PrivilegeType: UNDEFINED";
         actualMessage = exception.getMessage();
         assertThat(actualMessage, equalTo(expectedMessage));
+         */
 
         OptRequest optRequest = new OptRequest.Builder()
                 .withOptType(OptType.OUT)

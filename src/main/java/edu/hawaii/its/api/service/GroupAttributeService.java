@@ -12,7 +12,7 @@ public interface GroupAttributeService {
     List<SyncDestination> getAllSyncDestinations(String currentUsername, String path);
 
     List<SyncDestination> getSyncDestinations(Grouping grouping);
-    
+
     ///List<GroupingsServiceResult> changeOptStatus(OptRequest optRequest);
     List<GroupingsServiceResult> changeOptStatus(OptRequest optInRequest, OptRequest optOutRequest);
 
