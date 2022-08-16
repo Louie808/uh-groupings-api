@@ -119,12 +119,12 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         List<GroupingsServiceResult> results = new ArrayList<>();
 
         results.add(assignGrouperPrivilege(
-                optInRequest.getPrivilege().value(),
+                optInRequest.getPrivilegeType().value(),
                 optInRequest.getGroupName(),
                 optInRequest.getOptValue()));
 
         results.add(assignGrouperPrivilege(
-                optOutRequest.getPrivilege().value(),
+                optOutRequest.getPrivilegeType().value(),
                 optOutRequest.getGroupName(),
                 optOutRequest.getOptValue()));
 

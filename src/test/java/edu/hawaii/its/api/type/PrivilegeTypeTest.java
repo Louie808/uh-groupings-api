@@ -18,18 +18,4 @@ public class PrivilegeTypeTest {
         assertThat(PrivilegeType.OUT, equalTo(PrivilegeType.OUT));
         assertThat(PrivilegeType.OUT.value(), equalTo("optout"));
     }
-
-    @Test
-    public void find() {
-        PrivilegeType inPrivilegeType = PrivilegeType.find("optin");
-        assertThat(inPrivilegeType, equalTo(PrivilegeType.IN));
-
-        PrivilegeType outPrivilegeType = PrivilegeType.find("optout");
-        assertThat(outPrivilegeType, equalTo(PrivilegeType.OUT));
-
-        // Undefined find.
-        String badValue = "what?";
-        PrivilegeType privilegeType = PrivilegeType.find(badValue);
-        assertThat(privilegeType, equalTo(PrivilegeType.UNDEFINED));
-    }
 }

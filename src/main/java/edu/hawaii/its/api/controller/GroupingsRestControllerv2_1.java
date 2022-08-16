@@ -369,7 +369,7 @@ public class GroupingsRestControllerv2_1 {
         OptRequest optInRequest = new OptRequest.Builder()
                 .withUsername(currentUser)
                 .withGroupNameRoot(path)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.find(id))
                 .withOptValue(true)
                 .build();
@@ -377,7 +377,7 @@ public class GroupingsRestControllerv2_1 {
         OptRequest optOutRequest = new OptRequest.Builder()
                 .withUsername(currentUser)
                 .withGroupNameRoot(path)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.find(id))
                 .withOptValue(true)
                 .build();
@@ -400,7 +400,7 @@ public class GroupingsRestControllerv2_1 {
         OptRequest optInRequest = new OptRequest.Builder()
                 .withUsername(currentUser)
                 .withGroupNameRoot(path)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.find(id))
                 .withOptValue(false)
                 .build();
@@ -408,7 +408,7 @@ public class GroupingsRestControllerv2_1 {
         OptRequest optOutRequest = new OptRequest.Builder()
                 .withUsername(currentUser)
                 .withGroupNameRoot(path)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.find(id))
                 .withOptValue(false)
                 .build();

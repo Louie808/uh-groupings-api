@@ -199,7 +199,7 @@ public class TestGroupAttributeService {
         OptRequest optInRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -207,7 +207,7 @@ public class TestGroupAttributeService {
         OptRequest optOutRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -240,7 +240,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot("bogus-path")
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -248,7 +248,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot("bogus-path")
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -265,7 +265,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -273,7 +273,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -289,7 +289,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.IN)
                 .withOptValue(true)
                 .build();
@@ -297,7 +297,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.IN)
                 .withOptValue(true)
                 .build();
@@ -321,7 +321,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -329,7 +329,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.IN)
                 .withOptValue(false)
                 .build();
@@ -352,7 +352,7 @@ public class TestGroupAttributeService {
         OptRequest optInRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -360,7 +360,7 @@ public class TestGroupAttributeService {
         OptRequest optOutRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -385,7 +385,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -393,7 +393,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -410,7 +410,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot("bogus-path")
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -418,7 +418,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(iamtst01)
                 .withGroupNameRoot("bogus-path")
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -434,7 +434,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -442,7 +442,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -458,7 +458,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(true)
                 .build();
@@ -466,7 +466,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.OUT)
                 .withOptValue(true)
                 .build();
@@ -490,7 +490,7 @@ public class TestGroupAttributeService {
         optInRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();
@@ -498,7 +498,7 @@ public class TestGroupAttributeService {
         optOutRequest = new OptRequest.Builder()
                 .withUsername(ADMIN)
                 .withGroupNameRoot(GROUPING)
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptType(OptType.OUT)
                 .withOptValue(false)
                 .build();

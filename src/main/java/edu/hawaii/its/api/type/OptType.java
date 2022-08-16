@@ -2,23 +2,23 @@ package edu.hawaii.its.api.type;
 
 public enum OptType {
 
-    IN("uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in", "opt-in"),
-    OUT("uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out", "opt-out");
+    IN("uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in", InclusionType.IN),
+    OUT("uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out", InclusionType.OUT);
 
     private final String value;
-    private final String valueFormatted;
+    private final InclusionType inclusionType;
 
-    OptType(String value, String valueFormatted) {
+    OptType(String value, InclusionType inclusionType) {
         this.value = value;
-        this.valueFormatted = valueFormatted;
+        this.inclusionType = inclusionType;
     }
 
     public String value() {
         return value;
     }
 
-    public String valueFormatted() {
-        return valueFormatted;
+    public InclusionType inclusionType() {
+        return inclusionType;
     }
 
     public static OptType find(String value) {

@@ -590,7 +590,7 @@ public class GroupingsRestControllerv2_1Test {
                 .withOptType(OptType.IN)
                 .withUsername(USERNAME)
                 .withGroupNameRoot("grouping")
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptValue(true)
                 .build();
 
@@ -598,7 +598,7 @@ public class GroupingsRestControllerv2_1Test {
                 .withOptType(OptType.IN)
                 .withUsername(USERNAME)
                 .withGroupNameRoot("grouping")
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptValue(true)
                 .build();
 
@@ -616,7 +616,7 @@ public class GroupingsRestControllerv2_1Test {
                 .withOptType(OptType.OUT)
                 .withUsername(USERNAME)
                 .withGroupNameRoot("grouping")
-                .withPrivilege(PrivilegeType.IN)
+                .withPrivilegeType(PrivilegeType.IN)
                 .withOptValue(false)
                 .build();
 
@@ -624,7 +624,7 @@ public class GroupingsRestControllerv2_1Test {
                 .withOptType(OptType.OUT)
                 .withUsername(USERNAME)
                 .withGroupNameRoot("grouping")
-                .withPrivilege(PrivilegeType.OUT)
+                .withPrivilegeType(PrivilegeType.OUT)
                 .withOptValue(false)
                 .build();
 
