@@ -126,9 +126,21 @@ public final class OptRequest {
 
             //groupType = privilege.name().equals(optType.name()) ? GroupType.INCLUDE : GroupType.EXCLUDE;
 
+            /*
             if (privilege == privilege.IN && optType == optType.IN) {
                 groupType = GroupType.INCLUDE;
-            } else if (privilege == privilege.OUT && optType == optType.OUT){
+            } else if (privilege == privilege.OUT && optType == optType.OUT) {
+                groupType = GroupType.INCLUDE;
+            } else if (privilege == privilege.IN && optType == optType.OUT) {
+                groupType = GroupType.EXCLUDE;
+            } else if (privilege == privilege.OUT && optType == optType.IN) {
+                groupType = GroupType.EXCLUDE;
+            } else {
+                throw new IllegalArgumentException("Invalid PrivilegeType: " + privilege);
+            }
+             */
+
+            if (privilege.valueFormatted() == optType.valueFormatted()) {
                 groupType = GroupType.INCLUDE;
             } else {
                 groupType = GroupType.EXCLUDE;

@@ -2,19 +2,24 @@ package edu.hawaii.its.api.type;
 
 public enum PrivilegeType {
 
-    IN("optin"),
-    OUT("optout"),
-    UNDEFINED("");
-
+    IN("optin", "opt-in"),
+    OUT("optout", "opt-out"),
+    UNDEFINED("", "");
 
     private final String value;
+    private final String valueFormatted;
 
-    PrivilegeType(String value) {
+    PrivilegeType(String value, String valueFormatted) {
         this.value = value;
+        this.valueFormatted = valueFormatted;
     }
 
     public String value() {
         return value;
+    }
+
+    public String valueFormatted() {
+        return valueFormatted;
     }
 
     public static PrivilegeType find(String value) {
