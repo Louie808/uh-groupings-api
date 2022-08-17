@@ -14,6 +14,7 @@ public class OptTypeTest {
         String expectedInValue = "uh-settings:attributes:"
                 + "for-groups:uh-grouping:anyone-can:opt-in";
         assertThat(OptType.IN.value(), equalTo(expectedInValue));
+        assertThat(OptType.IN.inclusionType(), equalTo(InclusionType.IN));
     }
 
     @Test
@@ -22,6 +23,7 @@ public class OptTypeTest {
         String expectedOutValue = "uh-settings:attributes:"
                 + "for-groups:uh-grouping:anyone-can:opt-out";
         assertThat(OptType.OUT.value(), equalTo(expectedOutValue));
+        assertThat(OptType.OUT.inclusionType(), equalTo(InclusionType.OUT));
     }
 
     @Test

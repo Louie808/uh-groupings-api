@@ -11,11 +11,13 @@ public class PrivilegeTypeTest {
     public void privilegeTypeIn() {
         assertThat(PrivilegeType.IN, equalTo(PrivilegeType.IN));
         assertThat(PrivilegeType.IN.value(), equalTo("optin"));
+        assertThat(PrivilegeType.IN.inclusionType(), equalTo(InclusionType.IN));
     }
 
     @Test
     public void privilegeTypeOut() {
         assertThat(PrivilegeType.OUT, equalTo(PrivilegeType.OUT));
         assertThat(PrivilegeType.OUT.value(), equalTo("optout"));
+        assertThat(PrivilegeType.OUT.inclusionType(), equalTo(InclusionType.OUT));
     }
 }
