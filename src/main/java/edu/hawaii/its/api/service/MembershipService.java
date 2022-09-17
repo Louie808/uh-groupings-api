@@ -1,12 +1,12 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.GroupingsAddResults;
+import java.util.List;
+
+import edu.hawaii.its.api.gc.result.GroupingsAddResults;
+import edu.hawaii.its.api.gc.result.UpdateTimestampResult;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.UIAddMemberResults;
 import edu.hawaii.its.api.type.UIRemoveMemberResults;
-import edu.hawaii.its.api.type.UpdateTimestampResult;
-
-import java.util.List;
 
 public interface MembershipService {
 
@@ -41,13 +41,13 @@ public interface MembershipService {
     List<UIRemoveMemberResults> removeFromGroups(String adminUsername, String userToRemove, List<String> groupPaths);
 
     List<UIRemoveMemberResults> resetGroup(String currentUser, String path, List<String> uhNumbersInclude,
-            List<String> uhNumbersExclude);
+                                           List<String> uhNumbersExclude);
 
     UpdateTimestampResult updateLastModified(String groupPath);
 
     UpdateTimestampResult updateLastModifiedTimestamp(String dateTime, String groupPath);
 
     Integer getNumberOfMemberships(String currentUser, String uid);
-    
+
     UIAddMemberResults addMember(String currentUser, String userToAdd, String removalPath, String additionPath);
 }

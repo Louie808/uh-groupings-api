@@ -1,0 +1,37 @@
+package edu.hawaii.its.api.gc.command;
+
+import edu.hawaii.its.api.gc.result.SubjectsResults;
+import edu.internet2.middleware.grouperClient.api.GcGetSubjects;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+
+import java.util.List;
+
+public class SubjectsCommand extends GrouperCommand implements Command<SubjectsResults> {
+
+    private GcGetSubjects gcGetSubjects;
+
+    public SubjectsCommand(List<String> uhIdentifiers) {
+        gcGetSubjects = new GcGetSubjects();
+        for (String uhIdentifier : uhIdentifiers) {
+            addSubject(uhIdentifier);
+        }
+    }
+
+    public SubjectsResults execute() {
+        SubjectsResults subjectsResults;
+        try {
+            WsGetSubjectsResults wsGetSubjectsResults = gcGetSubjects.execute();
+            subjectsResults = new SubjectsResults(wsGetSubjectsResults);
+        } catch (RuntimeException e) {
+            subjectsResults = new SubjectsResults();
+        }
+        return subjectsResults;
+    }
+
+    private SubjectsCommand addSubject(String uhIdentifier) {
+        WsSubjectLookup wsSubjectLookup = subjectLookup(uhIdentifier);
+        gcGetSubjects.addWsSubjectLookup(wsSubjectLookup);
+        return this;
+    }
+}

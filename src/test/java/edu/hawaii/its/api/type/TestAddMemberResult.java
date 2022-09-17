@@ -4,11 +4,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.service.GrouperApiService;
 import edu.hawaii.its.api.service.MembershipService;
-import edu.hawaii.its.api.wrapper.AddMemberResult;
-import edu.hawaii.its.api.wrapper.RemoveMemberResult;
+import edu.hawaii.its.api.gc.result.AddMemberResult;
+import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +29,8 @@ public class TestAddMemberResult {
     @Autowired
     GrouperApiService grouperApiService;
 
-    @Autowired MembershipService membershipService;
+    @Autowired
+    MembershipService membershipService;
 
     @Value("${groupings.api.test.grouping_many_include}")
     private String GROUPING_INCLUDE;

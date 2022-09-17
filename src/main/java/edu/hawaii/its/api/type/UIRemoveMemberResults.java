@@ -1,6 +1,6 @@
 package edu.hawaii.its.api.type;
 
-import edu.hawaii.its.api.wrapper.RemoveMemberResult;
+import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
@@ -18,7 +18,7 @@ public class UIRemoveMemberResults {
     }
 
     public UIRemoveMemberResults(boolean userWasRemoved, String pathOfRemoved, String name, String uhUuid, String uid,
-            String result, String userIdentifier) {
+                                 String result, String userIdentifier) {
         this.userWasRemoved = userWasRemoved;
         this.pathOfRemoved = pathOfRemoved;
         this.name = name;
@@ -104,7 +104,8 @@ public class UIRemoveMemberResults {
         this.userIdentifier = userIdentifier;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "RemoveMemberResult{" +
                 "userWasRemoved=" + userWasRemoved +
                 ", pathOfRemoved='" + pathOfRemoved + '\'' +

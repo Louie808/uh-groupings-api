@@ -2,8 +2,8 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.exception.UhMemberNotFoundException;
 import edu.hawaii.its.api.util.JsonUtil;
-import edu.hawaii.its.api.wrapper.Subject;
-import edu.hawaii.its.api.wrapper.SubjectsResults;
+import edu.hawaii.its.api.gc.result.Subject;
+import edu.hawaii.its.api.gc.result.SubjectsResults;
 
 import java.util.ArrayList;
 import java.util.List;

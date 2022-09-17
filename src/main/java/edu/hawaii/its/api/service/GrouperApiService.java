@@ -2,8 +2,8 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.api.type.SyncDestination;
-import edu.hawaii.its.api.wrapper.AddMemberResult;
-import edu.hawaii.its.api.wrapper.RemoveMemberResult;
+import edu.hawaii.its.api.gc.result.AddMemberResult;
+import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
@@ -33,54 +33,54 @@ public interface GrouperApiService {
     RemoveMemberResult removeMember(String groupPath, String uhIdentifier);
 
     WsGetAttributeAssignmentsResults groupsOf(String assignType,
-            String attributeDefNameName);
+                                              String attributeDefNameName);
 
     WsGetAttributeAssignmentsResults attributeAssigns(String assignType,
-            String attributeDefNameName0,
-            String attributeDefNameName1);
+                                                      String attributeDefNameName0,
+                                                      String attributeDefNameName1);
 
     WsGetAttributeAssignmentsResults groupAttributeDefNames(String assignType,
-            String group);
+                                                            String group);
 
     WsGetAttributeAssignmentsResults groupAttributeAssigns(String assignType,
-            String attributeDefNameName,
-            String group);
+                                                           String attributeDefNameName,
+                                                           String group);
 
     WsHasMemberResults hasMemberResults(String group, String username);
 
     WsHasMemberResults hasMemberResults(String group, Person person);
 
     WsAssignAttributesResults assignAttributesResults(String attributeAssignType,
-            String attributeAssignOperation,
-            String ownerGroupName,
-            String attributeDefNameName,
-            String attributeAssignValueOperation,
-            WsAttributeAssignValue value);
+                                                      String attributeAssignOperation,
+                                                      String ownerGroupName,
+                                                      String attributeDefNameName,
+                                                      String attributeAssignValueOperation,
+                                                      WsAttributeAssignValue value);
 
     WsAssignAttributesResults assignAttributesResultsForGroup(String attributeAssignType,
-            String attributeAssignOperation,
-            String attributeDefNameName,
-            String ownerGroupName);
+                                                              String attributeAssignOperation,
+                                                              String attributeDefNameName,
+                                                              String ownerGroupName);
 
     WsAssignGrouperPrivilegesLiteResult assignGrouperPrivilegesLiteResult(String groupName,
-            String privilegeName,
-            WsSubjectLookup lookup,
-            boolean isAllowed);
+                                                                          String privilegeName,
+                                                                          WsSubjectLookup lookup,
+                                                                          boolean isAllowed);
 
     WsGetMembershipsResults membershipsResults(String groupName, WsSubjectLookup lookup);
 
     WsGetMembersResults membersResults(String subjectAttributeName,
-            WsSubjectLookup lookup,
-            List<String> groupPaths,
-            Integer pageNumber,
-            Integer pageSize,
-            String sortString,
-            Boolean isAscending);
+                                       WsSubjectLookup lookup,
+                                       List<String> groupPaths,
+                                       Integer pageNumber,
+                                       Integer pageSize,
+                                       String sortString,
+                                       Boolean isAscending);
 
     //Overloaded membersResults, only takes three parameters, no pageNumber, pageSize, sortString and isAscending
     WsGetMembersResults membersResults(String subjectAttributeName,
-            WsSubjectLookup lookup,
-            List<String> groupPaths);
+                                       WsSubjectLookup lookup,
+                                       List<String> groupPaths);
 
     WsGetGroupsResults groupsResults(String username);
 

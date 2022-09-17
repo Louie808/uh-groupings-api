@@ -1,13 +1,13 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.wrapper.FindGroupsResults;
+import edu.hawaii.its.api.gc.result.FindGroupsResults;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.api.type.SyncDestination;
 import edu.hawaii.its.api.util.JsonUtil;
-import edu.hawaii.its.api.wrapper.AddMemberCommand;
-import edu.hawaii.its.api.wrapper.AddMemberResult;
-import edu.hawaii.its.api.wrapper.RemoveMemberCommand;
-import edu.hawaii.its.api.wrapper.RemoveMemberResult;
+import edu.hawaii.its.api.gc.command.AddMemberCommand;
+import edu.hawaii.its.api.gc.result.AddMemberResult;
+import edu.hawaii.its.api.gc.command.RemoveMemberCommand;
+import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
 import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivilegesLite;
@@ -129,7 +129,7 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetAttributeAssignmentsResults groupsOf(String assignType,
-            String attributeDefNameName) {
+                                                     String attributeDefNameName) {
         return new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName)
                 .assignAttributeAssignType(assignType)
@@ -138,8 +138,8 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetAttributeAssignmentsResults attributeAssigns(String assignType,
-            String attributeDefNameName0,
-            String attributeDefNameName1) {
+                                                             String attributeDefNameName0,
+                                                             String attributeDefNameName1) {
         return new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName0)
                 .addAttributeDefNameName(attributeDefNameName1)
@@ -149,7 +149,7 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetAttributeAssignmentsResults groupAttributeDefNames(String assignType,
-            String group) {
+                                                                   String group) {
         return new GcGetAttributeAssignments()
                 .addOwnerGroupName(group)
                 .assignAttributeAssignType(assignType)
@@ -158,8 +158,8 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetAttributeAssignmentsResults groupAttributeAssigns(String assignType,
-            String attributeDefNameName,
-            String group) {
+                                                                  String attributeDefNameName,
+                                                                  String group) {
         return new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName)
                 .addOwnerGroupName(group)
@@ -199,11 +199,11 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsAssignAttributesResults assignAttributesResults(String attributeAssignType,
-            String attributeAssignOperation,
-            String ownerGroupName,
-            String attributeDefNameName,
-            String attributeAssignValueOperation,
-            WsAttributeAssignValue value) {
+                                                             String attributeAssignOperation,
+                                                             String ownerGroupName,
+                                                             String attributeDefNameName,
+                                                             String attributeAssignValueOperation,
+                                                             WsAttributeAssignValue value) {
 
         return new GcAssignAttributes()
                 .assignAttributeAssignType(attributeAssignType)
@@ -217,9 +217,9 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsAssignAttributesResults assignAttributesResultsForGroup(String attributeAssignType,
-            String attributeAssignOperation,
-            String attributeDefNameName,
-            String ownerGroupName) {
+                                                                     String attributeAssignOperation,
+                                                                     String attributeDefNameName,
+                                                                     String ownerGroupName) {
 
         return new GcAssignAttributes()
                 .assignAttributeAssignType(attributeAssignType)
@@ -231,9 +231,9 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsAssignGrouperPrivilegesLiteResult assignGrouperPrivilegesLiteResult(String groupName,
-            String privilegeName,
-            WsSubjectLookup lookup,
-            boolean isAllowed) {
+                                                                                 String privilegeName,
+                                                                                 WsSubjectLookup lookup,
+                                                                                 boolean isAllowed) {
 
         return new GcAssignGrouperPrivilegesLite()
                 .assignGroupName(groupName)
@@ -245,7 +245,7 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetMembershipsResults membershipsResults(String groupName,
-            WsSubjectLookup lookup) {
+                                                      WsSubjectLookup lookup) {
 
         return new GcGetMemberships()
                 .addGroupName(groupName)
@@ -255,12 +255,12 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetMembersResults membersResults(String subjectAttributeName,
-            WsSubjectLookup lookup,
-            List<String> groupPaths,
-            Integer pageNumber,
-            Integer pageSize,
-            String sortString,
-            Boolean isAscending) {
+                                              WsSubjectLookup lookup,
+                                              List<String> groupPaths,
+                                              Integer pageNumber,
+                                              Integer pageSize,
+                                              String sortString,
+                                              Boolean isAscending) {
         GcGetMembers members = new GcGetMembers();
 
         if (groupPaths != null && groupPaths.size() > 0) {
@@ -283,8 +283,8 @@ public class GrouperApiServiceImpl implements GrouperApiService {
 
     @Override
     public WsGetMembersResults membersResults(String subjectAttributeName,
-            WsSubjectLookup lookup,
-            List<String> groupPaths) {
+                                              WsSubjectLookup lookup,
+                                              List<String> groupPaths) {
         GcGetMembers members = new GcGetMembers();
 
         if (groupPaths != null && groupPaths.size() > 0) {

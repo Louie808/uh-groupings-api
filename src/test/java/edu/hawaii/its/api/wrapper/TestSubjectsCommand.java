@@ -1,7 +1,10 @@
 package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.Test;
+
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
+import edu.hawaii.its.api.gc.command.SubjectsCommand;
+import edu.hawaii.its.api.gc.result.SubjectsResults;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;

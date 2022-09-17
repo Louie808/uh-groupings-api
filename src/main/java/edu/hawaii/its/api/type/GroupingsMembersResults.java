@@ -1,5 +1,7 @@
 package edu.hawaii.its.api.type;
 
-public abstract class GroupingsMembersResults  implements GroupingsResult{
+import edu.hawaii.its.api.gc.result.GroupingsResult;
+
+public abstract class GroupingsMembersResults implements GroupingsResult {
     protected String resultCode;
 }

@@ -1,8 +1,11 @@
 package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.Test;
+
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.exception.RemoveMemberRequestRejectedException;
+import edu.hawaii.its.api.gc.command.RemoveMemberCommand;
+import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;

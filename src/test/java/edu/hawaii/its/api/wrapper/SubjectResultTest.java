@@ -2,6 +2,8 @@ package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import edu.hawaii.its.api.gc.result.SubjectResult;
 import edu.hawaii.its.api.util.JsonUtil;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
@@ -12,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-import static edu.hawaii.its.api.wrapper.SubjectResult.SUBJECT_NOT_FOUND;
+import static edu.hawaii.its.api.gc.result.SubjectResult.SUBJECT_NOT_FOUND;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -39,7 +41,6 @@ public class SubjectResultTest {
         assertThat(results.getResultCode(), equalTo(SUBJECT_NOT_FOUND));
         assertThat(results.getSubjectAttributeNameCount(), equalTo(0));
     }
-
 
     @Test
     public void emptyConstruction() {

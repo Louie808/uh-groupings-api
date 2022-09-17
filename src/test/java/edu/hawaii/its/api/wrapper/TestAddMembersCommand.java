@@ -2,8 +2,11 @@ package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.exception.AddMemberRequestRejectedException;
+import edu.hawaii.its.api.gc.command.AddMembersCommand;
+import edu.hawaii.its.api.gc.result.AddMembersResults;
 import edu.hawaii.its.api.service.GrouperApiService;
 
 import org.springframework.beans.factory.annotation.Autowired;

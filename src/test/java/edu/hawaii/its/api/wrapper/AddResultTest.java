@@ -2,6 +2,8 @@ package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import edu.hawaii.its.api.gc.result.AddResult;
 import edu.hawaii.its.api.util.JsonUtil;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResult;
@@ -39,7 +41,7 @@ public class AddResultTest {
     @Test
     public void successfulAddResultTest() {
         String json = propertyValue("ws.add.member.result.success");
-        WsAddMemberResult wsAddMemberResult = JsonUtil.asObject(json, WsAddMemberResult .class);
+        WsAddMemberResult wsAddMemberResult = JsonUtil.asObject(json, WsAddMemberResult.class);
         AddResult addResult = new AddResult(wsAddMemberResult);
         assertNotNull(addResult);
         assertEquals("SUCCESS", addResult.getResultCode());
@@ -51,7 +53,7 @@ public class AddResultTest {
     @Test
     public void memberAlreadyExistedResultTest() {
         String json = propertyValue("ws.add.member.result.already.existed");
-        WsAddMemberResult wsAddMemberResult = JsonUtil.asObject(json, WsAddMemberResult .class);
+        WsAddMemberResult wsAddMemberResult = JsonUtil.asObject(json, WsAddMemberResult.class);
         AddResult addResult = new AddResult(wsAddMemberResult);
         assertNotNull(addResult);
         assertEquals("SUCCESS_ALREADY_EXISTED", addResult.getResultCode());

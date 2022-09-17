@@ -11,7 +11,7 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.OptRequest;
 import edu.hawaii.its.api.type.SyncDestination;
-import edu.hawaii.its.api.wrapper.AttributeAssignmentsResults;
+import edu.hawaii.its.api.gc.result.AttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
@@ -124,7 +124,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
      */
     @Override
     public GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername,
-            String attributeName, boolean turnAttributeOn) {
+                                                             String attributeName, boolean turnAttributeOn) {
 
         checkPrivileges(groupPath, ownerUsername);
         GroupingsServiceResult gsr;

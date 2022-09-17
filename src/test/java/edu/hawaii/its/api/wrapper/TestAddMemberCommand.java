@@ -1,8 +1,11 @@
 package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.Test;
+
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.exception.AddMemberRequestRejectedException;
+import edu.hawaii.its.api.gc.command.AddMemberCommand;
+import edu.hawaii.its.api.gc.result.AddMemberResult;
 import edu.hawaii.its.api.service.GrouperApiService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,8 @@ public class TestAddMemberCommand {
     @Autowired
     private GrouperApiService grouperApiService;
 
-    @Test public void constructor() {
+    @Test
+    public void constructor() {
         AddMemberCommand addMemberCommand = new AddMemberCommand(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0));
         assertNotNull(addMemberCommand);
     }

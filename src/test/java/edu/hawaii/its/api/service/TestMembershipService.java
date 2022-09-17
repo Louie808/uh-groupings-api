@@ -1,24 +1,10 @@
 package edu.hawaii.its.api.service;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import edu.hawaii.its.api.configuration.SpringBootWebApplication;
-import edu.hawaii.its.api.type.UIAddMemberResults;
-import edu.hawaii.its.api.type.Membership;
-import edu.hawaii.its.api.type.UIRemoveMemberResults;
-import edu.hawaii.its.api.type.UpdateTimestampResult;
-import edu.hawaii.its.api.util.Dates;
-
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.test.context.ActiveProfiles;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,11 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.context.ActiveProfiles;
+
+import edu.hawaii.its.api.configuration.SpringBootWebApplication;
+import edu.hawaii.its.api.gc.result.UpdateTimestampResult;
+import edu.hawaii.its.api.type.Membership;
+import edu.hawaii.its.api.type.UIAddMemberResults;
+import edu.hawaii.its.api.type.UIRemoveMemberResults;
+import edu.hawaii.its.api.util.Dates;
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 @ActiveProfiles("integrationTest")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

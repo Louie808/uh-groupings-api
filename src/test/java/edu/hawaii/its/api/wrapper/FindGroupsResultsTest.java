@@ -5,11 +5,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import edu.hawaii.its.api.wrapper.FindGroupsResults;
+import edu.hawaii.its.api.gc.result.FindGroupsResults;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static edu.hawaii.its.api.util.JsonUtil.asObject;
+
 import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
 
 import java.io.FileInputStream;

@@ -2,12 +2,13 @@ package edu.hawaii.its.api.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import edu.hawaii.its.api.exception.UhMemberNotFoundException;
 import edu.hawaii.its.api.type.GroupType;
 import edu.hawaii.its.api.type.GroupingPath;
 import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.api.wrapper.SubjectCommand;
-import edu.hawaii.its.api.wrapper.SubjectResult;
+import edu.hawaii.its.api.gc.command.SubjectCommand;
+import edu.hawaii.its.api.gc.result.SubjectResult;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;

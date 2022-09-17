@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
@@ -9,8 +10,8 @@ import edu.hawaii.its.api.type.GroupingPath;
 import edu.hawaii.its.api.type.SyncDestination;
 import edu.hawaii.its.api.type.OptType;
 import edu.hawaii.its.api.type.GroupType;
-import edu.hawaii.its.api.wrapper.AttributeAssignmentsResults;
-import edu.hawaii.its.api.wrapper.GroupsResults;
+import edu.hawaii.its.api.gc.result.AttributeAssignmentsResults;
+import edu.hawaii.its.api.gc.result.GroupsResults;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
@@ -61,7 +62,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     @Autowired
     private MemberAttributeService memberAttributeService;
 
-    @Autowired GroupAttributeService groupAttributeService;
+    @Autowired
+    GroupAttributeService groupAttributeService;
 
     /**
      * Fetch a grouping from Grouper or the database.
@@ -109,7 +111,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
      */
     @Override
     public Grouping getPaginatedGrouping(String groupingPath, String ownerUsername, Integer page, Integer size,
-            String sortString, Boolean isAscending) {
+                                         String sortString, Boolean isAscending) {
         logger.info(
                 "getPaginatedGrouping; grouping: " + groupingPath + "; username: " + ownerUsername + "; page: " + page
                         + "; size: " + size + "; sortString: " + sortString + "; isAscending: " + isAscending + ";");
@@ -183,8 +185,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
     @Override
     public Map<String, Group> getPaginatedMembers(String ownerUsername, List<String> groupPaths, Integer page,
-            Integer size,
-            String sortString, Boolean isAscending) {
+                                                  Integer size,
+                                                  String sortString, Boolean isAscending) {
         logger.info("getPaginatedMembers; ownerUsername: " + ownerUsername + "; groups: " + groupPaths +
                 "; page: " + page + "; size: " + size + "; sortString: " + sortString + "; isAscending: " + isAscending
                 + ";");

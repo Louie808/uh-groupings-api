@@ -1,7 +1,10 @@
 package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.Test;
+
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
+import edu.hawaii.its.api.gc.command.RemoveMembersCommand;
+import edu.hawaii.its.api.gc.result.RemoveMembersResults;
 import edu.hawaii.its.api.service.GrouperApiService;
 
 import org.springframework.beans.factory.annotation.Autowired;

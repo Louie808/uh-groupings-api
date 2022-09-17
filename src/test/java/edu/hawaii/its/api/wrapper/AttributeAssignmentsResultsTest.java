@@ -2,6 +2,8 @@ package edu.hawaii.its.api.wrapper;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import edu.hawaii.its.api.gc.result.AttributeAssignmentsResults;
 import edu.hawaii.its.api.util.JsonUtil;
 import edu.hawaii.its.api.type.OptType;
 

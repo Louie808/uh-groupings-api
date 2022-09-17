@@ -1,7 +1,7 @@
 package edu.hawaii.its.api.type;
 
-import edu.hawaii.its.api.wrapper.AddMemberResult;
-import edu.hawaii.its.api.wrapper.RemoveMemberResult;
+import edu.hawaii.its.api.gc.result.AddMemberResult;
+import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
@@ -23,7 +23,7 @@ public class UIAddMemberResults {
     }
 
     public UIAddMemberResults(boolean userWasAdded, boolean userWasRemoved, String pathOfAdd, String pathOfRemoved,
-            String name, String uhUuid, String uid, String result, String userIdentifier) {
+                              String name, String uhUuid, String uid, String result, String userIdentifier) {
         this.userWasAdded = userWasAdded;
         this.userWasRemoved = userWasRemoved;
         this.pathOfAdd = pathOfAdd;
@@ -36,7 +36,7 @@ public class UIAddMemberResults {
     }
 
     public UIAddMemberResults(boolean userWasAdded, String pathOfAdd,
-            String name, String uhUuid, String uid, String result, String userIdentifier) {
+                              String name, String uhUuid, String uid, String result, String userIdentifier) {
         this.userWasAdded = userWasAdded;
         this.pathOfAdd = pathOfAdd;
         this.name = name;
