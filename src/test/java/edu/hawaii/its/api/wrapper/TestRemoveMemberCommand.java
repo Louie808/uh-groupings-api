@@ -1,28 +1,28 @@
 package edu.hawaii.its.api.wrapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.exception.RemoveMemberRequestRejectedException;
 import edu.hawaii.its.api.gc.command.RemoveMemberCommand;
 import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
-
 @ActiveProfiles("integrationTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestRemoveMemberCommand {
+
     @Value("${groupings.api.test.uhuuids}")
     private List<String> TEST_UH_NUMBERS;
+
     @Value("${groupings.api.test.grouping_many_include}")
     private String GROUPING_INCLUDE;
 
@@ -46,7 +46,6 @@ public class TestRemoveMemberCommand {
             assertEquals("", response.getUid());
             assertEquals(GROUPING_INCLUDE, response.getGroupPath());
             assertEquals("SUCCESS_WASNT_IMMEDIATE", response.getResultCode());
-
         } catch (RemoveMemberRequestRejectedException e) {
             fail("Should not throw exception when invalid identifier is passed.");
         }

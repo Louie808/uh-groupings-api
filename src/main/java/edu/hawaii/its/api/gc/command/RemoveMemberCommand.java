@@ -1,15 +1,15 @@
 package edu.hawaii.its.api.gc.command;
 
 import edu.hawaii.its.api.exception.RemoveMemberRequestRejectedException;
-
 import edu.hawaii.its.api.gc.result.RemoveMemberResult;
 import edu.internet2.middleware.grouperClient.api.GcDeleteMember;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
 
-public class RemoveMemberCommand extends GrouperCommand implements Command<RemoveMemberResult> {
+public class RemoveMemberCommand implements Command<RemoveMemberResult> {
 
     private final GcDeleteMember gcDeleteMember;
 
+    // Constructor.
     public RemoveMemberCommand(String groupPath, String uhIdentifier) {
         gcDeleteMember = new GcDeleteMember();
         this.includeUhMemberDetails(true)
@@ -17,6 +17,7 @@ public class RemoveMemberCommand extends GrouperCommand implements Command<Remov
                 .addUhIdentifier(uhIdentifier);
     }
 
+    @Override
     public RemoveMemberResult execute() {
         RemoveMemberResult removeMemberResult;
         try {
@@ -57,4 +58,9 @@ public class RemoveMemberCommand extends GrouperCommand implements Command<Remov
         gcDeleteMember.assignIncludeSubjectDetail(includeDetails);
         return this;
     }
+
+    private boolean isUhUuid(String naming) {
+        return naming != null && naming.matches("\\d+");
+    }
+
 }

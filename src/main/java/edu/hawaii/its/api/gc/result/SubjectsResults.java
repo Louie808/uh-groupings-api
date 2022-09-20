@@ -7,7 +7,8 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 
 public class SubjectsResults extends Results {
-    private WsGetSubjectsResults wsGetSubjectsResults;
+
+    private final WsGetSubjectsResults wsGetSubjectsResults;
 
     public SubjectsResults(WsGetSubjectsResults wsGetSubjectsResults) {
         if (wsGetSubjectsResults == null) {

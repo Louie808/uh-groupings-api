@@ -1,22 +1,21 @@
 package edu.hawaii.its.api.wrapper;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.hawaii.its.api.gc.command.SubjectCommand;
 import edu.hawaii.its.api.gc.result.SubjectResult;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @ActiveProfiles("integrationTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestSubjectCommand {
+
     @Value("${groupings.api.test.uhuuids}")
     private List<String> TEST_UH_NUMBERS;
 

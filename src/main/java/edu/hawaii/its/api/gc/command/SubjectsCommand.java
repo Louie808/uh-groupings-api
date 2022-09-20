@@ -1,15 +1,14 @@
 package edu.hawaii.its.api.gc.command;
 
+import java.util.List;
+
 import edu.hawaii.its.api.gc.result.SubjectsResults;
 import edu.internet2.middleware.grouperClient.api.GcGetSubjects;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
-import java.util.List;
+public class SubjectsCommand implements Command<SubjectsResults> {
 
-public class SubjectsCommand extends GrouperCommand implements Command<SubjectsResults> {
-
-    private GcGetSubjects gcGetSubjects;
+    private final GcGetSubjects gcGetSubjects;
 
     public SubjectsCommand(List<String> uhIdentifiers) {
         gcGetSubjects = new GcGetSubjects();
@@ -18,6 +17,7 @@ public class SubjectsCommand extends GrouperCommand implements Command<SubjectsR
         }
     }
 
+    @Override
     public SubjectsResults execute() {
         SubjectsResults subjectsResults;
         try {
@@ -30,8 +30,7 @@ public class SubjectsCommand extends GrouperCommand implements Command<SubjectsR
     }
 
     private SubjectsCommand addSubject(String uhIdentifier) {
-        WsSubjectLookup wsSubjectLookup = subjectLookup(uhIdentifier);
-        gcGetSubjects.addWsSubjectLookup(wsSubjectLookup);
+        gcGetSubjects.addWsSubjectLookup(new SubjectLookup(uhIdentifier));
         return this;
     }
 }

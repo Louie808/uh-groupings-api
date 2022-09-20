@@ -3,12 +3,12 @@ package edu.hawaii.its.api.gc.command;
 import edu.hawaii.its.api.gc.result.SubjectResult;
 import edu.internet2.middleware.grouperClient.api.GcGetSubjects;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
-public class SubjectCommand extends GrouperCommand implements Command<SubjectResult> {
+public class SubjectCommand implements Command<SubjectResult> {
 
     private final GcGetSubjects gcGetSubjects;
 
+    // Constructor.
     public SubjectCommand(String uhIdentifier) {
         gcGetSubjects = new GcGetSubjects();
         this.addSubject(uhIdentifier)
@@ -19,6 +19,7 @@ public class SubjectCommand extends GrouperCommand implements Command<SubjectRes
                 .addSubjectAttribute("givenName");
     }
 
+    @Override
     public SubjectResult execute() {
         SubjectResult subjectResult;
         try {
@@ -31,8 +32,7 @@ public class SubjectCommand extends GrouperCommand implements Command<SubjectRes
     }
 
     private SubjectCommand addSubject(String uhIdentifier) {
-        WsSubjectLookup wsSubjectLookup = subjectLookup(uhIdentifier);
-        gcGetSubjects.addWsSubjectLookup(wsSubjectLookup);
+        gcGetSubjects.addWsSubjectLookup(new SubjectLookup(uhIdentifier));
         return this;
     }
 

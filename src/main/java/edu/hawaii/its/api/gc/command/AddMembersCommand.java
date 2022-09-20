@@ -1,14 +1,14 @@
 package edu.hawaii.its.api.gc.command;
 
-import edu.hawaii.its.api.exception.AddMemberRequestRejectedException;
+import java.util.List;
 
+import edu.hawaii.its.api.exception.AddMemberRequestRejectedException;
 import edu.hawaii.its.api.gc.result.AddMembersResults;
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 
-import java.util.List;
+public class AddMembersCommand implements Command<AddMembersResults> {
 
-public class AddMembersCommand extends GrouperCommand implements Command<AddMembersResults> {
     private final GcAddMember gcAddMember;
 
     public AddMembersCommand(String groupPath, List<String> uhIdentifiers) {
@@ -18,9 +18,9 @@ public class AddMembersCommand extends GrouperCommand implements Command<AddMemb
         }
         includeUhMemberDetails(true);
         assignGroupPath(groupPath);
-
     }
 
+    @Override
     public AddMembersResults execute() {
         AddMembersResults addMembersResults;
         try {
@@ -60,6 +60,10 @@ public class AddMembersCommand extends GrouperCommand implements Command<AddMemb
     private AddMembersCommand includeUhMemberDetails(boolean includeDetails) {
         gcAddMember.assignIncludeSubjectDetail(includeDetails);
         return this;
+    }
+
+    private boolean isUhUuid(String naming) {
+        return naming != null && naming.matches("\\d+");
     }
 
 }
