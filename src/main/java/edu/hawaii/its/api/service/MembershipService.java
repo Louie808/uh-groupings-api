@@ -9,31 +9,15 @@ import java.util.List;
 
 public interface MembershipService {
 
-    List<AddMemberResult> addOwnerships(String groupingPath, String ownerUsername, List<String> newOwnerUsername);
-
-    List<RemoveMemberResult> removeOwnerships(String groupingPath, String actor, List<String> ownersToRemove);
-
     List<Membership> membershipResults(String currentUser, String uid);
 
-    List<AddMemberResult> addGroupMembers(String currentUser, String groupPath, List<String> usersToAdd);
+    List<AddMemberResult> addMembers(String function, String currentUser, String groupPath, List<String> usersToAdd);
 
-    List<AddMemberResult> addIncludeMembers(String currentUser, String groupingPath, List<String> usersToAdd);
-
-    List<AddMemberResult> addExcludeMembers(String currentUser, String groupingPath, List<String> usersToAdd);
-
-    List<RemoveMemberResult> removeGroupMembers(String currentUser, String groupPath, List<String> usersToRemove);
-
-    List<RemoveMemberResult> removeIncludeMembers(String currentUser, String groupingPath, List<String> usersToRemove);
-
-    List<RemoveMemberResult> removeExcludeMembers(String currentUser, String groupingPath, List<String> usersToRemove);
+    List<RemoveMemberResult> removeMembers(String function, String currentUser, String groupPath, List<String> usersToRemove);
 
     AddMemberResult optIn(String currentUser, String groupingPath, String uid);
 
     AddMemberResult optOut(String currentUser, String groupingPath, String uid);
-
-    AddMemberResult addAdmin(String currentUser, String adminToAdd);
-
-    RemoveMemberResult removeAdmin(String currentUser, String adminToRemove);
 
     List<RemoveMemberResult> removeFromGroups(String adminUsername, String userToRemove, List<String> groupPaths);
 
