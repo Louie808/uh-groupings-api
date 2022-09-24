@@ -15,9 +15,29 @@ public interface MembershipService {
 
     List<RemoveMemberResult> removeMembers(String function, String currentUser, String groupPath, List<String> usersToRemove);
 
+    List<AddMemberResult> addOwnerships(String groupingPath, String ownerUsername, List<String> newOwnerUsername);
+
+    List<RemoveMemberResult> removeOwnerships(String groupingPath, String actor, List<String> ownersToRemove);
+
+    List<AddMemberResult> addGroupMembers(String currentUser, String groupPath, List<String> usersToAdd);
+
+    List<AddMemberResult> addIncludeMembers(String currentUser, String groupingPath, List<String> usersToAdd);
+
+    List<AddMemberResult> addExcludeMembers(String currentUser, String groupingPath, List<String> usersToAdd);
+
+    List<RemoveMemberResult> removeGroupMembers(String currentUser, String groupPath, List<String> usersToRemove);
+
+    List<RemoveMemberResult> removeIncludeMembers(String currentUser, String groupingPath, List<String> usersToRemove);
+
+    List<RemoveMemberResult> removeExcludeMembers(String currentUser, String groupingPath, List<String> usersToRemove);
+
     AddMemberResult optIn(String currentUser, String groupingPath, String uid);
 
     AddMemberResult optOut(String currentUser, String groupingPath, String uid);
+
+    AddMemberResult addAdmin(String currentUser, String adminToAdd);
+
+    RemoveMemberResult removeAdmin(String currentUser, String adminToRemove);
 
     List<RemoveMemberResult> removeFromGroups(String adminUsername, String userToRemove, List<String> groupPaths);
 
@@ -29,6 +49,6 @@ public interface MembershipService {
     UpdateTimestampResult updateLastModifiedTimestamp(String dateTime, String groupPath);
 
     Integer getNumberOfMemberships(String currentUser, String uid);
-    
+
     AddMemberResult addMember(String currentUser, String userToAdd, String removalPath, String additionPath);
 }
