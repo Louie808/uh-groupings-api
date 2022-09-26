@@ -134,12 +134,12 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public void checkPrivileges(MembershipGroupType membershipGroupType, String currentUser, String groupPath) {
-        if (!membershipGroupType.equals("ADMIN")) {
+        if (!membershipGroupType.value().equals("ADMIN")) {
             if (!memberAttributeService.isOwner(groupPath, currentUser) && !memberAttributeService.isAdmin(
                     currentUser)) {
                 throw new AccessDeniedException();
             }
-        } else if (membershipGroupType.equals("ADMIN")) {
+        } else {
             if (!memberAttributeService.isAdmin(currentUser)) {
                 throw new AccessDeniedException();
             }
