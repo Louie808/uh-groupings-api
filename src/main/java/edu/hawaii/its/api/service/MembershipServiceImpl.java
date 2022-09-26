@@ -9,6 +9,7 @@ import edu.hawaii.its.api.type.AddMemberResult;
 import edu.hawaii.its.api.type.GroupType;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.OptType;
+import edu.hawaii.its.api.type.MembershipGroupType;
 import edu.hawaii.its.api.type.RemoveMemberResult;
 import edu.hawaii.its.api.type.UpdateTimestampResult;
 import edu.hawaii.its.api.util.Dates;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,17 +132,14 @@ public class MembershipServiceImpl implements MembershipService {
         return memberships;
     }
 
-    public void checkPrivileges(String function, String currentUser, String groupPath) {
-        // checks if user has privileges for add/remove Ownerships and add/remove include/exclude
-        // has to be either an owner of the group path or an admin or both to have sufficient privileges
-        if (!function.toUpperCase().equals("ADMIN")) {
+    @Override
+    public void checkPrivileges(MembershipGroupType membershipGroupType, String currentUser, String groupPath) {
+        if (!membershipGroupType.equals("ADMIN")) {
             if (!memberAttributeService.isOwner(groupPath, currentUser) && !memberAttributeService.isAdmin(
                     currentUser)) {
                 throw new AccessDeniedException();
             }
-        // checks if user has privileges for add/remove admin
-        // has to just be an admin
-        } else if (function.toUpperCase().equals("ADMIN")) {
+        } else if (membershipGroupType.equals("ADMIN")) {
             if (!memberAttributeService.isAdmin(currentUser)) {
                 throw new AccessDeniedException();
             }
@@ -154,11 +153,11 @@ public class MembershipServiceImpl implements MembershipService {
      * include or exclude, addGroupMembers will return empty list.
      */
     @Override
-    public List<AddMemberResult> addMembers(String function, String currentUser, String groupPath, List<String> usersToAdd) {
-        logger.info("addMembers; function: " + function + "; currentUser: " + currentUser + "; groupPath: " + groupPath + ";"
+    public List<AddMemberResult> addMembers(MembershipGroupType membershipGroupType, String currentUser, String groupPath, List<String> usersToAdd) {
+        logger.info("addMembers; function: " + membershipGroupType + "; currentUser: " + currentUser + "; groupPath: " + groupPath + ";"
                 + "usersToAdd: " + usersToAdd + ";");
 
-        checkPrivileges(function, currentUser, groupPath);
+        checkPrivileges(membershipGroupType, currentUser, groupPath);
 
         //In original function but variable is never called
         //WsSubjectLookup wsSubjectLookup = grouperApiService.subjectLookup(ownerUsername);
@@ -166,19 +165,18 @@ public class MembershipServiceImpl implements MembershipService {
         List<AddMemberResult> addMemberResults = new ArrayList<>();
         String removalPath = groupingAssignmentService.parentGroupingPath(groupPath);
 
-        switch (function.toUpperCase()) {
-            case "INCLUDE":
+        switch (membershipGroupType) {
+            case INCLUDE:
                 groupPath = groupPath + INCLUDE;
                 removalPath += EXCLUDE;
                 break;
-            case "EXCLUDE":
+            case EXCLUDE:
                 groupPath = groupPath + EXCLUDE;
                 removalPath += INCLUDE;
                 break;
-            case "OWNERS":
-                groupPath = groupPath + OWNERS;
+            case OWNERS:
                 break;
-            case "ADMIN":
+            case ADMIN:
                 //Empty for else statement
                 break;
             default:
@@ -189,24 +187,24 @@ public class MembershipServiceImpl implements MembershipService {
             AddMemberResult addMemberResult;
             AddMemberResponse addMemberResponse;
 
-            switch (function.toUpperCase()) {
-                case "OWNER":
-                    addMemberResponse = grouperApiService.addMember(groupPath, userToAdd);
+            switch (membershipGroupType) {
+                case OWNERS:
+                    addMemberResponse = grouperApiService.addMember(groupPath + OWNERS, userToAdd);
                     addMemberResult = new AddMemberResult(addMemberResponse);
 
                     if (addMemberResult.isUserWasAdded()) {
                         updateLastModified(groupPath);
-                        updateLastModified(groupPath);
+                        updateLastModified(groupPath + OWNERS);
                     }
                     addMemberResults.add(addMemberResult);
                     break;
-                case "ADMIN":
+                case ADMIN:
                     addMemberResponse = grouperApiService.addMember(GROUPING_ADMINS, userToAdd);
                     addMemberResult = new AddMemberResult(addMemberResponse);
                     addMemberResults.add(addMemberResult);
                     break;
-                case "INCLUDE":
-                case "EXCLUDE":
+                case INCLUDE:
+                case EXCLUDE:
                     addMemberResults.add(addMember(currentUser, userToAdd, removalPath, groupPath));
                     break;
             }
@@ -233,26 +231,25 @@ public class MembershipServiceImpl implements MembershipService {
      * from the include and exclude groups only. Passing in other group paths will result in undefined behavior.
      */
     @Override
-    public List<RemoveMemberResult> removeMembers(String function, String currentUser, String groupPath,
+    public List<RemoveMemberResult> removeMembers(MembershipGroupType membershipGroupType, String currentUser, String groupPath,
             List<String> usersToRemove) {
         logger.info("removeGroupMembers; currentUser: " + currentUser + "; groupPath: " + groupPath + ";"
                 + "usersToRemove: " + usersToRemove + ";");
 
-        checkPrivileges(function, currentUser, groupPath);
+        checkPrivileges(membershipGroupType, currentUser, groupPath);
 
         List<RemoveMemberResult> removeMemberResults = new ArrayList<>();
 
-        switch (function.toUpperCase()) {
-            case "INCLUDE":
+        switch (membershipGroupType) {
+            case INCLUDE:
                 groupPath = groupPath + INCLUDE;
                 break;
-            case "EXCLUDE":
+            case EXCLUDE:
                 groupPath = groupPath + EXCLUDE;
                 break;
-            case "OWNERS":
-                groupPath = groupPath + OWNERS;
+            case OWNERS:
                 break;
-            case "ADMIN":
+            case ADMIN:
                 //Empty for else statement
                 break;
             default:
@@ -264,8 +261,8 @@ public class MembershipServiceImpl implements MembershipService {
             RemoveMemberResult removeMemberResult;
             RemoveMemberResponse removeMemberResponse;
 
-            switch (function.toUpperCase()) {
-                case "OWNER":
+            switch (membershipGroupType) {
+                case OWNERS:
                     removeMemberResponse =
                             grouperApiService.removeMember(groupPath + OWNERS, userToRemove);
                     removeMemberResult = new RemoveMemberResult(removeMemberResponse);
@@ -275,13 +272,13 @@ public class MembershipServiceImpl implements MembershipService {
                     }
                     removeMemberResults.add(removeMemberResult);
                     break;
-                case "ADMIN":
+                case ADMIN:
                     removeMemberResponse = grouperApiService.removeMember(GROUPING_ADMINS, userToRemove);
                     removeMemberResult = new RemoveMemberResult(removeMemberResponse);
                     removeMemberResults.add(removeMemberResult);
                     break;
-                case "INCLUDE":
-                case "EXCLUDE":
+                case INCLUDE:
+                case EXCLUDE:
                     removeMemberResponse = grouperApiService.removeMember(groupPath, userToRemove);
                     removeMemberResult = new RemoveMemberResult(removeMemberResponse);
                     if (removeMemberResult.isUserWasRemoved()) {
@@ -362,10 +359,10 @@ public class MembershipServiceImpl implements MembershipService {
         }
         List<RemoveMemberResult> results = new ArrayList<>();
         if (!uhNumbersInclude.isEmpty()) {
-            results.addAll(removeMembers("INCLUDE", currentUser, path + GroupType.INCLUDE.value(), uhNumbersInclude));
+            results.addAll(removeMembers(MembershipGroupType.INCLUDE, currentUser, path + GroupType.INCLUDE.value(), uhNumbersInclude));
         }
         if (!uhNumbersExclude.isEmpty()) {
-            results.addAll(removeMembers("EXCLUDE", currentUser, path + GroupType.EXCLUDE.value(), uhNumbersExclude));
+            results.addAll(removeMembers(MembershipGroupType.EXCLUDE, currentUser, path + GroupType.EXCLUDE.value(), uhNumbersExclude));
         }
         return results;
     }
@@ -435,7 +432,7 @@ public class MembershipServiceImpl implements MembershipService {
         logger.info("addAdmin; username: " + currentUser + "; newAdmin: " + adminToAdd + ";");
 
         if (!memberAttributeService.isAdmin(currentUser)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         AddMemberResponse addMemberResponse = grouperApiService.addMember(GROUPING_ADMINS, adminToAdd);
         return new AddMemberResult(addMemberResponse);
@@ -449,7 +446,7 @@ public class MembershipServiceImpl implements MembershipService {
         logger.info("removeAdmin; username: " + currentUser + "; adminToRemove: " + adminToRemove + ";");
 
         if (!memberAttributeService.isAdmin(currentUser)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         RemoveMemberResponse removeMemberResponse = grouperApiService.removeMember(GROUPING_ADMINS, adminToRemove);
         return new RemoveMemberResult(removeMemberResponse);
@@ -464,7 +461,7 @@ public class MembershipServiceImpl implements MembershipService {
                 "; groupingPath: " + groupingPath + "; usersToAdd: " + usersToAdd + ";");
         if (!memberAttributeService.isOwner(groupingPath, currentUser) && !memberAttributeService.isAdmin(
                 currentUser)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         return addGroupMembers(currentUser, groupingPath + GroupType.INCLUDE.value(), usersToAdd);
     }
@@ -478,7 +475,7 @@ public class MembershipServiceImpl implements MembershipService {
                 "; groupingPath: " + groupingPath + "; usersToAdd: " + usersToAdd + ";");
         if (!memberAttributeService.isOwner(groupingPath, currentUser) && !memberAttributeService.isAdmin(
                 currentUser)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         return addGroupMembers(currentUser, groupingPath + GroupType.EXCLUDE.value(), usersToAdd);
     }
@@ -492,7 +489,7 @@ public class MembershipServiceImpl implements MembershipService {
                 "; groupingPath: " + groupingPath + "; usersToRemove: " + usersToRemove + ";");
         if (!memberAttributeService.isOwner(groupingPath, currentUser) && !memberAttributeService.isAdmin(
                 currentUser)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         return removeGroupMembers(currentUser, groupingPath + GroupType.INCLUDE.value(), usersToRemove);
     }
@@ -506,7 +503,7 @@ public class MembershipServiceImpl implements MembershipService {
                 "; groupingPath: " + groupingPath + "; usersToRemove: " + usersToRemove + ";");
         if (!memberAttributeService.isOwner(groupingPath, currentUser) && !memberAttributeService.isAdmin(
                 currentUser)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         return removeGroupMembers(currentUser, groupingPath + GroupType.EXCLUDE.value(), usersToRemove);
     }
@@ -524,7 +521,7 @@ public class MembershipServiceImpl implements MembershipService {
                 + ";");
 
         if (!memberAttributeService.isOwner(groupingPath, actor) && !memberAttributeService.isAdmin(actor)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
         // Makes the admin also the owner in the event that there are no remaining owners otherwise.
         if (!memberAttributeService.isOwner(groupingPath, actor) && memberAttributeService.isAdmin(actor)) {
@@ -561,7 +558,7 @@ public class MembershipServiceImpl implements MembershipService {
         List<AddMemberResult> addOwnerResults = new ArrayList<>();
         if (!memberAttributeService.isOwner(groupingPath, ownerUsername) && !memberAttributeService
                 .isAdmin(ownerUsername)) {
-            throw new AccessControlException(INSUFFICIENT_PRIVILEGES);
+            throw new AccessDeniedException();
         }
 
         AddMemberResult addOwnerResult;

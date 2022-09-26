@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.AddMemberResult;
 import edu.hawaii.its.api.type.Membership;
+import edu.hawaii.its.api.type.MembershipGroupType;
 import edu.hawaii.its.api.type.RemoveMemberResult;
 import edu.hawaii.its.api.type.UpdateTimestampResult;
 
@@ -11,9 +12,11 @@ public interface MembershipService {
 
     List<Membership> membershipResults(String currentUser, String uid);
 
-    List<AddMemberResult> addMembers(String function, String currentUser, String groupPath, List<String> usersToAdd);
+    void checkPrivileges(MembershipGroupType membershipGroupType, String currentUser, String groupPath);
 
-    List<RemoveMemberResult> removeMembers(String function, String currentUser, String groupPath, List<String> usersToRemove);
+    List<AddMemberResult> addMembers(MembershipGroupType membershipGroupType, String currentUser, String groupPath, List<String> usersToAdd);
+
+    List<RemoveMemberResult> removeMembers(MembershipGroupType membershipGroupType, String currentUser, String groupPath, List<String> usersToRemove);
 
     List<AddMemberResult> addOwnerships(String groupingPath, String ownerUsername, List<String> newOwnerUsername);
 

@@ -5,7 +5,8 @@ public enum MembershipGroupType {
     INCLUDE("INCLUDE"),
     EXCLUDE("EXCLUDE"),
     OWNERS("OWNERS"),
-    ADMIN("ADMIN");
+    ADMIN("ADMIN"),
+    UNDEFINED("UNDEFINED");
 
     private final String value;
 
@@ -23,6 +24,6 @@ public enum MembershipGroupType {
                 return membershipGroupType;
             }
         }
-        return null;
+        return UNDEFINED;
     }
 }
