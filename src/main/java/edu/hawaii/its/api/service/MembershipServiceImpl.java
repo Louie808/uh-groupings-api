@@ -134,7 +134,7 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public void checkPrivileges(MembershipGroupType membershipGroupType, String currentUser, String groupPath) {
-        if (!membershipGroupType.value().equals("ADMIN")) {
+        if (membershipGroupType != MembershipGroupType.ADMIN) {
             if (!memberAttributeService.isOwner(groupPath, currentUser) && !memberAttributeService.isAdmin(
                     currentUser)) {
                 throw new AccessDeniedException();
@@ -165,50 +165,44 @@ public class MembershipServiceImpl implements MembershipService {
         List<AddMemberResult> addMemberResults = new ArrayList<>();
         String removalPath = groupingAssignmentService.parentGroupingPath(groupPath);
 
-        switch (membershipGroupType) {
-            case INCLUDE:
-                groupPath = groupPath + INCLUDE;
-                removalPath += EXCLUDE;
-                break;
-            case EXCLUDE:
-                groupPath = groupPath + EXCLUDE;
-                removalPath += INCLUDE;
-                break;
-            case OWNERS:
-                break;
-            case ADMIN:
-                //Empty for else statement
-                break;
-            default:
-                throw new GcWebServiceError("404: Invalid group path.");
-        }
-
         for (String userToAdd : usersToAdd) {
-            AddMemberResult addMemberResult;
+            AddMemberResult addMemberResult = null;
             AddMemberResponse addMemberResponse;
+            String addedGroupPath = null;
 
             switch (membershipGroupType) {
                 case OWNERS:
-                    addMemberResponse = grouperApiService.addMember(groupPath + OWNERS, userToAdd);
-                    addMemberResult = new AddMemberResult(addMemberResponse);
-
-                    if (addMemberResult.isUserWasAdded()) {
-                        updateLastModified(groupPath);
-                        updateLastModified(groupPath + OWNERS);
-                    }
-                    addMemberResults.add(addMemberResult);
+                    addedGroupPath = groupPath + OWNERS;
                     break;
                 case ADMIN:
-                    addMemberResponse = grouperApiService.addMember(GROUPING_ADMINS, userToAdd);
-                    addMemberResult = new AddMemberResult(addMemberResponse);
-                    addMemberResults.add(addMemberResult);
+                    addedGroupPath = GROUPING_ADMINS;
                     break;
                 case INCLUDE:
+                    addedGroupPath = groupPath + INCLUDE;
+                    removalPath += EXCLUDE;
                 case EXCLUDE:
-                    addMemberResults.add(addMember(currentUser, userToAdd, removalPath, groupPath));
+                    addedGroupPath = groupPath + EXCLUDE;
+                    removalPath += INCLUDE;
                     break;
+                default:
+                    throw new GcWebServiceError("404: Invalid group path.");
             }
 
+            if (addMemberResult.isUserWasRemoved() && (membershipGroupType != MembershipGroupType.ADMIN)) {
+                updateLastModified(groupPath);
+                updateLastModified(addedGroupPath);
+            }
+
+            if (membershipGroupType == MembershipGroupType.ADMIN || membershipGroupType == MembershipGroupType.OWNERS) {
+                addMemberResponse = grouperApiService.addMember(groupPath, userToAdd);
+                addMemberResult = new AddMemberResult(addMemberResponse);
+                logger.info("addGroupMembers; " + addMemberResult.toString());
+                addMemberResults.add(addMemberResult);
+            }
+
+            if (membershipGroupType == MembershipGroupType.INCLUDE || membershipGroupType == MembershipGroupType.EXCLUDE) {
+                addMemberResults.add(addMember(currentUser, userToAdd, removalPath, addedGroupPath));
+            }
         }
         return addMemberResults;
     }
@@ -240,54 +234,46 @@ public class MembershipServiceImpl implements MembershipService {
 
         List<RemoveMemberResult> removeMemberResults = new ArrayList<>();
 
-        switch (membershipGroupType) {
-            case INCLUDE:
-                groupPath = groupPath + INCLUDE;
-                break;
-            case EXCLUDE:
-                groupPath = groupPath + EXCLUDE;
-                break;
-            case OWNERS:
-                break;
-            case ADMIN:
-                //Empty for else statement
-                break;
-            default:
-                throw new GcWebServiceError("404: Invalid group path.");
-        }
-
-
         for (String userToRemove : usersToRemove) {
-            RemoveMemberResult removeMemberResult;
+            RemoveMemberResult removeMemberResult = null;
             RemoveMemberResponse removeMemberResponse;
+            String addedGroupPath;
 
             switch (membershipGroupType) {
                 case OWNERS:
-                    removeMemberResponse =
-                            grouperApiService.removeMember(groupPath + OWNERS, userToRemove);
-                    removeMemberResult = new RemoveMemberResult(removeMemberResponse);
-                    if (removeMemberResult.isUserWasRemoved()) {
-                        updateLastModified(groupPath);
-                        updateLastModified(groupPath + OWNERS);
-                    }
-                    removeMemberResults.add(removeMemberResult);
+
+                    //The code below doesn't make sense, ask in next meeting
+
+                    // Makes the admin also the owner in the event that there are no remaining owners otherwise.
+                    //if (!memberAttributeService.isOwner(groupPath, actor) && memberAttributeService.isAdmin(actor)) {
+                    //    addOwnerships(groupPath, ownersToRemove.get(0), Arrays.asList(actor));
+                    //}
+
+                    addedGroupPath = groupPath + OWNERS;
+                    // owners updates the groupPath AND the groupPath + owners whereas include/exclude does not
                     break;
                 case ADMIN:
-                    removeMemberResponse = grouperApiService.removeMember(GROUPING_ADMINS, userToRemove);
-                    removeMemberResult = new RemoveMemberResult(removeMemberResponse);
-                    removeMemberResults.add(removeMemberResult);
+                    // admin does not updateLastModified, why is that?
+                    addedGroupPath = GROUPING_ADMINS;
                     break;
                 case INCLUDE:
-                case EXCLUDE:
-                    removeMemberResponse = grouperApiService.removeMember(groupPath, userToRemove);
-                    removeMemberResult = new RemoveMemberResult(removeMemberResponse);
-                    if (removeMemberResult.isUserWasRemoved()) {
-                        updateLastModified(groupPath);
-                    }
-                    removeMemberResults.add(removeMemberResult);
-                    logger.info("removeGroupMembers; " + removeMemberResult.toString());
+                    addedGroupPath = groupPath + INCLUDE;
                     break;
+                case EXCLUDE:
+                    addedGroupPath = groupPath + EXCLUDE;
+                    break;
+                default:
+                    throw new GcWebServiceError("404: Invalid group path.");
             }
+            assert removeMemberResult != null;
+            logger.info("removeGroupMembers; " + removeMemberResult.toString());
+            removeMemberResponse = grouperApiService.removeMember(groupPath, userToRemove);
+            removeMemberResult = new RemoveMemberResult(removeMemberResponse);
+            if (removeMemberResult.isUserWasRemoved() && (membershipGroupType != MembershipGroupType.ADMIN)) {
+                updateLastModified(groupPath);
+                updateLastModified(addedGroupPath);
+            }
+            removeMemberResults.add(removeMemberResult);
     }
         return removeMemberResults;
     }
