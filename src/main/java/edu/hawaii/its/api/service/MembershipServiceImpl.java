@@ -180,6 +180,7 @@ public class MembershipServiceImpl implements MembershipService {
                 case INCLUDE:
                     addedGroupPath = groupPath + INCLUDE;
                     removalPath += EXCLUDE;
+                    break;
                 case EXCLUDE:
                     addedGroupPath = groupPath + EXCLUDE;
                     removalPath += INCLUDE;
