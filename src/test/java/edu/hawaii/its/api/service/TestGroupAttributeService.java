@@ -28,11 +28,10 @@ import edu.hawaii.its.api.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.primitives.Booleans;
 
 @ActiveProfiles("integrationTest")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -547,7 +546,7 @@ public class TestGroupAttributeService {
         // Should return success no matter what.
         List<String> optList = new ArrayList<>();
         boolean[] arr = { false, true, true, false };
-        List<Boolean> optSwitches = Booleans.asList(arr);
+        List<Boolean> optSwitches = new ArrayList(Arrays.asList(arr));
         optList.add(OptType.IN.value());
         optList.add(OptType.OUT.value());
         optSwitches.forEach(bool -> {
