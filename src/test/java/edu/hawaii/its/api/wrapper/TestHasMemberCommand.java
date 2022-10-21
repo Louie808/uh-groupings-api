@@ -34,10 +34,10 @@ public class TestHasMemberCommand {
     @Value("${groupings.api.grouping_admins}")
     private String GROUPING_ADMINS;
 
-    @Value("${groupings.api.test.usernames}")
+    @Value("${groupings.api.test.uh-usernames}")
     private List<String> TEST_USERNAMES;
 
-    @Value("${groupings.api.test.uhuuids}")
+    @Value("${groupings.api.test.uh-numbers}")
     private List<String> TEST_UH_NUMBERS;
 
     @Test
@@ -48,7 +48,7 @@ public class TestHasMemberCommand {
 
     @Test
     public void executeTest() {
-        HasMemberResult hasMemberResult = new HasMemberCommand(GROUPING_INCLUDE, TEST_USERNAMES.get(0)).execute();
+        HasMemberResult hasMemberResult = new HasMemberCommand(GROUPING_OWNERS, "gilbertz").execute();
         assertNotNull(hasMemberResult);
         JsonUtil.printJson(hasMemberResult);
     }

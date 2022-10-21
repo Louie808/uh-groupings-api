@@ -20,4 +20,14 @@ public class HasResult extends MemberResult {
     @Override public String getResultCode() {
         return null;
     }
+
+    @Override public String getUhUuid() {
+        return super.getUhUuid();
+    }
+
+    @Override public String getName() {
+        return super.getName();
+    }
+
+
 }

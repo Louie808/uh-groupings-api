@@ -26,4 +26,8 @@ public class HasMemberResult extends Results {
     @Override public String getResultCode() {
         return this.wsHasMemberResult.getResultMetadata().getResultCode();
     }
+
+    public String getUhUuid() {
+        return new Subject(wsHasMemberResult.getWsSubject()).getUhUuid();
+    }
 }
