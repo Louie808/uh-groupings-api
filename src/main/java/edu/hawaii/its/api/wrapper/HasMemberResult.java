@@ -6,6 +6,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
 public class HasMemberResult extends Results {
     private WsHasMemberResults wsHasMemberResults;
     private WsHasMemberResult wsHasMemberResult;
+    private Subject subject;
 
     public HasMemberResult(WsHasMemberResults wsHasMemberResults) {
         this.wsHasMemberResults = wsHasMemberResults;
@@ -13,9 +14,10 @@ public class HasMemberResult extends Results {
             this.wsHasMemberResults = new WsHasMemberResults();
         }
         if (wsHasMemberResults.getResults() != null) {
-            this.wsHasMemberResult = wsHasMemberResults.getResults()[0];
+            wsHasMemberResult = wsHasMemberResults.getResults()[0];
+            this.subject = new Subject(wsHasMemberResult.getWsSubject());
         } else {
-            this.wsHasMemberResult = new WsHasMemberResult();
+            this.subject = new Subject();
         }
     }
 
@@ -28,6 +30,14 @@ public class HasMemberResult extends Results {
     }
 
     public String getUhUuid() {
-        return new Subject(wsHasMemberResult.getWsSubject()).getUhUuid();
+        return subject.getUhUuid();
+    }
+
+    public String getName() {
+        return subject.getName();
+    }
+
+    public String getUid() {
+        return subject.getUid();
     }
 }
