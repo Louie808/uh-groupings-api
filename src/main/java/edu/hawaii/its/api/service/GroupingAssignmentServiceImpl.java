@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -375,7 +376,6 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                 .collect(Collectors.toList());
 
         if (groupsOpted.size() > 0) {
-
             List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults =
                     grouperFactoryService.makeWsGetAttributeAssignmentsResultsTrio(
                             ASSIGN_TYPE_GROUP,
@@ -383,11 +383,14 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                             groupsOpted);
 
             List<WsGroup> triosList = new ArrayList<>();
-            for (WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
-                triosList.addAll(Arrays.asList(results.getWsGroups()));
+            if (attributeAssignmentsResults != null) {
+                for (WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
+                    if (results != null && results.getWsGroups() != null) {
+                        triosList.addAll(Arrays.asList(results.getWsGroups()));
+                    }
+                }
+                groupingsOpted.addAll(triosList.stream().map(WsGroup::getName).collect(Collectors.toList()));
             }
-
-            groupingsOpted.addAll(triosList.stream().map(WsGroup::getName).collect(Collectors.toList()));
         }
         return helperService.makeGroupings(groupingsOpted);
     }
@@ -642,7 +645,6 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
             String text = "optableGroupings; attributeAssignmentsResults "
                     + " or attributeAssignmentsResults.wsAttributeAssigns is null.";
             logger.warn(text);
-            return Collections.emptyList();
         }
         return new ArrayList<>(new HashSet<>(optablePaths));
     }
@@ -715,10 +717,12 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                         OPT_OUT,
                         groupPaths);
 
-        assignmentsResults
-                .stream()
-                .filter(results -> results.getWsAttributeAssigns() != null)
-                .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
+        if (assignmentsResults != null) {
+            assignmentsResults
+                    .stream()
+                    .filter(results -> results.getWsAttributeAssigns() != null)
+                    .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
+        }
 
         if (attributeAssigns.size() > 0) {
             attributeAssigns.stream().filter(assign -> assign.getAttributeDefNameName() != null).forEach(assign -> {
