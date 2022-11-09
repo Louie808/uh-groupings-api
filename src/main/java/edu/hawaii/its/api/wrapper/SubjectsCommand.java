@@ -1,5 +1,7 @@
 package edu.hawaii.its.api.wrapper;
 
+import edu.hawaii.its.api.util.JsonUtil;
+
 import edu.internet2.middleware.grouperClient.api.GcGetSubjects;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
@@ -21,6 +23,7 @@ public class SubjectsCommand extends GrouperCommand implements Command<SubjectsR
         SubjectsResults subjectsResults;
         try {
             WsGetSubjectsResults wsGetSubjectsResults = gcGetSubjects.execute();
+            JsonUtil.printJson(wsGetSubjectsResults);
             subjectsResults = new SubjectsResults(wsGetSubjectsResults);
         } catch (RuntimeException e) {
             subjectsResults = new SubjectsResults();

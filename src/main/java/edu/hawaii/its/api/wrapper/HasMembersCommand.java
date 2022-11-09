@@ -1,7 +1,5 @@
 package edu.hawaii.its.api.wrapper;
 
-import edu.hawaii.its.api.util.JsonUtil;
-
 import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
 
@@ -13,16 +11,17 @@ public class HasMembersCommand extends GrouperCommand implements Command<HasMemb
 
     public HasMembersCommand(String groupPath, List<String> uhIdentifiers) {
         gcHasMember = new GcHasMember();
+        gcHasMember.assignIncludeSubjectDetail(true);
         for (String uhIdentifier : uhIdentifiers) {
             this.assignGroupPath(groupPath)
                     .addUhIdentifier(uhIdentifier);
         }
     }
+
     @Override public HasMembersResults execute() {
         HasMembersResults hasMembersResult;
         try {
             WsHasMemberResults wsHasMemberResults = gcHasMember.execute();
-            JsonUtil.printJson(wsHasMemberResults);
             hasMembersResult = new HasMembersResults(wsHasMemberResults);
         } catch (RuntimeException e) {
             hasMembersResult = new HasMembersResults();

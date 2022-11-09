@@ -1,55 +1,55 @@
 package edu.hawaii.its.api.wrapper;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
 
-public class HasMemberResult extends Results {
-    private WsHasMemberResults wsHasMemberResults;
-    private WsHasMemberResult wsHasMemberResult;
-    private Subject subject;
+public class HasMemberResult extends MemberResult {
 
-    public HasMemberResult(WsHasMemberResults wsHasMemberResults) {
-        this.wsHasMemberResults = wsHasMemberResults;
-        if (this.wsHasMemberResults == null) {
-            this.wsHasMemberResults = new WsHasMemberResults();
-        }
-        if (wsHasMemberResults.getResults() != null) {
-            wsHasMemberResult = wsHasMemberResults.getResults()[0];
-            this.subject = new Subject(wsHasMemberResult.getWsSubject());
-        } else {
-            this.subject = new Subject();
-        }
-    }
+    private final WsHasMemberResult wsHasMemberResult;
+
+    private final Subject subject;
 
     public HasMemberResult(WsHasMemberResult wsHasMemberResult) {
-        this.wsHasMemberResult = wsHasMemberResult;
-        if (this.wsHasMemberResult == null) {
+        if (wsHasMemberResult == null) {
             this.wsHasMemberResult = new WsHasMemberResult();
-        }
-        if (wsHasMemberResult.getResultMetadata() != null) {
-            this.subject = new Subject(wsHasMemberResult.getWsSubject());
-        } else {
             this.subject = new Subject();
+        } else {
+            this.wsHasMemberResult = wsHasMemberResult;
+            if (wsHasMemberResult.getWsSubject() == null) {
+                this.subject = new Subject();
+            } else {
+                this.subject = new Subject(wsHasMemberResult.getWsSubject());
+            }
+
         }
     }
 
     public HasMemberResult() {
-        this.wsHasMemberResults = new WsHasMemberResults();
+        this.wsHasMemberResult = new WsHasMemberResult();
+        this.subject = new Subject();
     }
 
     @Override public String getResultCode() {
-        return this.wsHasMemberResult.getResultMetadata().getResultCode();
+        if (wsHasMemberResult.getResultMetadata() == null) {
+            return "";
+        }
+        String resultCode = wsHasMemberResult.getResultMetadata().getResultCode();
+        return resultCode != null ? resultCode : "";
     }
 
-    public String getUhUuid() {
+    @Override public String getUhUuid() {
         return subject.getUhUuid();
     }
 
-    public String getName() {
+    @Override public String getName() {
         return subject.getName();
     }
 
     public String getUid() {
-        return subject.getUid();
+        String[] attributeValues = wsHasMemberResult.getWsSubject().getAttributeValues();
+        if (isEmpty(attributeValues)) {
+            return "";
+        }
+        String uid = wsHasMemberResult.getWsSubject().getAttributeValue(0);
+        return uid != null ? uid : "";
     }
 }

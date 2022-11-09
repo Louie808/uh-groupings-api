@@ -1,29 +1,27 @@
 package edu.hawaii.its.api.wrapper;
 
-import edu.hawaii.its.api.util.JsonUtil;
-
 import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
 
-public class HasMemberCommand extends GrouperCommand implements Command<HasMemberResult> {
+public class HasMemberCommand extends GrouperCommand implements Command<HasMemberResults> {
     private GcHasMember gcHasMember;
 
     public HasMemberCommand(String groupPath, String uhIdentifier) {
         gcHasMember = new GcHasMember();
+        gcHasMember.assignIncludeSubjectDetail(true);
         this.assignGroupPath(groupPath)
                 .addUhIdentifier(uhIdentifier);
     }
 
-    @Override public HasMemberResult execute() {
-        HasMemberResult hasMemberResult;
+    @Override public HasMemberResults execute() {
+        HasMemberResults hasMemberResults;
         try {
             WsHasMemberResults wsHasMemberResults = gcHasMember.execute();
-            JsonUtil.printJson(wsHasMemberResults);
-            hasMemberResult = new HasMemberResult(wsHasMemberResults);
+            hasMemberResults = new HasMemberResults(wsHasMemberResults);
         } catch (RuntimeException e) {
-            hasMemberResult = new HasMemberResult();
+            hasMemberResults = new HasMemberResults();
         }
-        return hasMemberResult;
+        return hasMemberResults;
     }
 
     private HasMemberCommand assignGroupPath(String groupPath) {

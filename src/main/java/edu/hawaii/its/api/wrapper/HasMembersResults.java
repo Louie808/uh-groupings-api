@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.wrapper;
 
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
 
@@ -38,10 +39,15 @@ public class HasMembersResults extends Results {
         String success = "SUCCESS";
         String failure = "FAILURE";
         for (HasMemberResult hasMemberResult : getResults()) {
-            if (hasMemberResult.getResultCode().equals(success)) {
+            if (hasMemberResult.getResultCode().equals("IS_MEMBER")) {
                 return success;
             }
         }
         return failure;
+    }
+
+    public String getGroupPath() {
+        WsGroup wsGroup = wsHasMemberResults.getWsGroup();
+        return (wsGroup != null && wsGroup.getName() != null) ? wsGroup.getName() : "";
     }
 }

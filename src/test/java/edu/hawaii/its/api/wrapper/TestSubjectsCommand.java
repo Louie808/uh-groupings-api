@@ -14,7 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("integrationTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestSubjectsCommand {
-    @Value("${groupings.api.test.uhuuids}")
+    @Value("${groupings.api.test.uh-usernames}")
+    private List<String> TEST_UH_USERNAMES;
+
+    @Value("${groupings.api.test.uh-numbers}")
     private List<String> TEST_UH_NUMBERS;
 
     @Test
