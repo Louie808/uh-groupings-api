@@ -21,6 +21,18 @@ public class HasMemberResult extends Results {
         }
     }
 
+    public HasMemberResult(WsHasMemberResult wsHasMemberResult) {
+        this.wsHasMemberResult = wsHasMemberResult;
+        if (this.wsHasMemberResult == null) {
+            this.wsHasMemberResult = new WsHasMemberResult();
+        }
+        if (wsHasMemberResult.getResultMetadata() != null) {
+            this.subject = new Subject(wsHasMemberResult.getWsSubject());
+        } else {
+            this.subject = new Subject();
+        }
+    }
+
     public HasMemberResult() {
         this.wsHasMemberResults = new WsHasMemberResults();
     }

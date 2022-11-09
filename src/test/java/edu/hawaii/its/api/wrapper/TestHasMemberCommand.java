@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ActiveProfiles("integrationTest")
@@ -48,8 +49,20 @@ public class TestHasMemberCommand {
 
     @Test
     public void executeTest() {
-        HasMemberResult hasMemberResult = new HasMemberCommand(GROUPING_OWNERS, "gilbertz").execute();
+//        HasMemberResult hasMemberResult = new HasMemberCommand(GROUPING_OWNERS, "testiwta").execute();
+//        assertNotNull(hasMemberResult);
+//        assertEquals("testiwta", hasMemberResult.getUid());
+//        assertEquals("IS_NOT_MEMBER", hasMemberResult.getResultCode());
+//        assertEquals("Testf-iwt-a TestIAM-staff", hasMemberResult.getName());
+//        assertEquals("99997010", hasMemberResult.getUhUuid());
+//        JsonUtil.printJson(hasMemberResult);
+
+        HasMemberResult hasMemberResult = new HasMemberCommand(GROUPING_OWNERS, TEST_USERNAMES.get(0)).execute();
         assertNotNull(hasMemberResult);
+        assertEquals(TEST_USERNAMES.get(0), hasMemberResult.getUid());
+        assertEquals("IS_NOT_MEMBER", hasMemberResult.getResultCode());
+        assertEquals("Testf-iwt-a TestIAM-staff", hasMemberResult.getName());
+        assertEquals(TEST_UH_NUMBERS.get(0), hasMemberResult.getUhUuid());
         JsonUtil.printJson(hasMemberResult);
     }
 }
