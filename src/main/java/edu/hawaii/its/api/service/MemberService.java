@@ -1,5 +1,7 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.wrapper.HasMemberCommand;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -9,18 +11,19 @@ public class MemberService {
     private String GROUPING_ADMINS;
 
     public boolean isAdmin(String uhIdentifier) {
-       return false;
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(GROUPING_ADMINS, uhIdentifier);
+        return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
 
     public boolean isMember(String groupPath, String uhIdentifier) {
         return false;
     }
 
-    public  boolean isIncludeMember(String groupingPath, String uhIdentifier) {
+    public boolean isIncludeMember(String groupingPath, String uhIdentifier) {
         return false;
     }
 
-    public  boolean isExcludeMember(String groupingPath, String uhIdentifier) {
+    public boolean isExcludeMember(String groupingPath, String uhIdentifier) {
         return false;
     }
 
