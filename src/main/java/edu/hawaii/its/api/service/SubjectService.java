@@ -25,7 +25,7 @@ public class SubjectService {
         return isValidSubject(new SubjectCommand(uhIdentifier).execute());
     }
 
-    public boolean isValidSubject(SubjectResult subjectResult) {
+    private boolean isValidSubject(SubjectResult subjectResult) {
         return subjectResult.getResultCode().equals(SUCCESS);
     }
 
@@ -49,6 +49,7 @@ public class SubjectService {
         if (!isValidSubject(subjectResult)) {
             throw new UhMemberNotFoundException(subjectResult.getResultCode());
         }
+        return subjectResult.getUhUuid();
     }
 
 }
