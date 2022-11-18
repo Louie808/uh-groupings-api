@@ -21,22 +21,26 @@ public class MemberService {
    // public GroupingHasMemberResult isAdminResult(String uhIdentifier);
 
     public boolean isMember(String groupPath, String uhIdentifier) {
-        return false;
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupPath, uhIdentifier);
+        return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
     // public GroupingHasMemberResult isMemberResult(String uhIdentifier);
 
     public boolean isIncludeMember(String groupingPath, String uhIdentifier) {
-        return false;
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupingPath, uhIdentifier);
+        return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
     // public GroupingHasMemberResult isIncludeMemberResult(String uhIdentifier);
 
     public boolean isExcludeMember(String groupingPath, String uhIdentifier) {
-        return false;
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupingPath, uhIdentifier);
+        return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
     // public GroupingHasMemberResult isExcludeMemberResult(String uhIdentifier);
 
     public boolean isOwner(String groupingPath, String uhIdentifier) {
-        return false;
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupingPath, uhIdentifier);
+        return hasMemberCommand.execute().getResultCode().equals("IS_OWNER");
     }
     // public GroupingHasMemberResult isOwnerResult(String uhIdentifier);
     /*
