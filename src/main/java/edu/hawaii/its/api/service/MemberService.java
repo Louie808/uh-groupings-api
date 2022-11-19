@@ -1,8 +1,8 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.GroupType;
 import edu.hawaii.its.api.wrapper.HasMemberCommand;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,9 @@ public class MemberService {
     @Value("${groupings.api.grouping_admins}")
     private String GROUPING_ADMINS;
 
+    @Autowired
+    private SubjectService subjectService;
+
     public boolean isAdmin(String uhIdentifier) {
         HasMemberCommand hasMemberCommand = new HasMemberCommand(GROUPING_ADMINS, uhIdentifier);
         return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
@@ -22,13 +25,15 @@ public class MemberService {
    // public GroupingHasMemberResult isAdminResult(String uhIdentifier);
 
     public boolean isMember(String groupPath, String uhIdentifier) {
+
         HasMemberCommand hasMemberCommand = new HasMemberCommand(groupPath, uhIdentifier);
         return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
     // public GroupingHasMemberResult isMemberResult(String uhIdentifier);
 
     public boolean isIncludeMember(String groupingPath, String uhIdentifier) {
-        return isMember(groupingPath + ":include", uhIdentifier);
+        String validUhUuid = subjectService.getValidUhUuid(uhIdentifier);
+        return isMember(groupingPath + ":include", validUhUuid);
     }
     // public GroupingHasMemberResult isIncludeMemberResult(String uhIdentifier);
 
