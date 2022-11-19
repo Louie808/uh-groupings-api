@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.type.GroupType;
 import edu.hawaii.its.api.wrapper.HasMemberCommand;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -27,20 +28,17 @@ public class MemberService {
     // public GroupingHasMemberResult isMemberResult(String uhIdentifier);
 
     public boolean isIncludeMember(String groupingPath, String uhIdentifier) {
-        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupingPath, uhIdentifier);
-        return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
+        return isMember(groupingPath + ":include", uhIdentifier);
     }
     // public GroupingHasMemberResult isIncludeMemberResult(String uhIdentifier);
 
     public boolean isExcludeMember(String groupingPath, String uhIdentifier) {
-        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupingPath, uhIdentifier);
-        return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
+        return isMember(groupingPath + ":exclude", uhIdentifier);
     }
     // public GroupingHasMemberResult isExcludeMemberResult(String uhIdentifier);
 
     public boolean isOwner(String groupingPath, String uhIdentifier) {
-        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupingPath, uhIdentifier);
-        return hasMemberCommand.execute().getResultCode().equals("IS_OWNER");
+        return isMember(groupingPath + ":owners", uhIdentifier);
     }
     // public GroupingHasMemberResult isOwnerResult(String uhIdentifier);
     /*

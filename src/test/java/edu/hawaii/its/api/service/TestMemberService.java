@@ -21,9 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestMemberService {
 
-    @Value("${groupings.api.test.admin_user}")
-    private String ADMIN;
-
     @Value("${groupings.api.test.uh-usernames}")
     private List<String> TEST_UH_USERNAMES;
 
@@ -45,12 +42,11 @@ public class TestMemberService {
     @Value("${groupings.api.grouping_admins}")
     private String GROUPING_ADMINS;
 
+    @Value("${groupings.api.test.grouping_many_owners}")
+    private String GROUPING_OWNERS;
+
     @Autowired
     MemberService memberService;
-    @Autowired
-    private MembershipService membershipService;
-    @Autowired
-    private MemberAttributeService memberAttributeService;
     @Test
     public void testIsAdmin() {
         String uid = TEST_UH_USERNAMES.get(0);
@@ -100,18 +96,18 @@ public class TestMemberService {
 
         removeMember(GROUPING_INCLUDE, uid);
         removeMember(GROUPING_INCLUDE, uhUuid);
-        assertFalse(memberService.isIncludeMember(GROUPING_INCLUDE, uid));
-        assertFalse(memberService.isIncludeMember(GROUPING_INCLUDE, uhUuid));
+        assertFalse(memberService.isIncludeMember(GROUPING, uid));
+        assertFalse(memberService.isIncludeMember(GROUPING, uhUuid));
 
         addMember(GROUPING_INCLUDE, uid);
         addMember(GROUPING_INCLUDE, uhUuid);
-        assertTrue(memberService.isIncludeMember(GROUPING_INCLUDE, uid));
-        assertTrue(memberService.isIncludeMember(GROUPING_INCLUDE, uhUuid));
+        assertTrue(memberService.isIncludeMember(GROUPING, uid));
+        assertTrue(memberService.isIncludeMember(GROUPING, uhUuid));
 
         removeMember(GROUPING_INCLUDE, uid);
         removeMember(GROUPING_INCLUDE, uhUuid);
-        assertFalse(memberService.isIncludeMember(GROUPING_INCLUDE, uid));
-        assertFalse(memberService.isIncludeMember(GROUPING_INCLUDE, uhUuid));
+        assertFalse(memberService.isIncludeMember(GROUPING, uid));
+        assertFalse(memberService.isIncludeMember(GROUPING, uhUuid));
     }
 
     @Test
@@ -121,43 +117,39 @@ public class TestMemberService {
 
         removeMember(GROUPING_EXCLUDE, uid);
         removeMember(GROUPING_EXCLUDE, uhUuid);
-        assertFalse(memberService.isExcludeMember(GROUPING_EXCLUDE, uid));
-        assertFalse(memberService.isExcludeMember(GROUPING_EXCLUDE, uhUuid));
+        assertFalse(memberService.isExcludeMember(GROUPING, uid));
+        assertFalse(memberService.isExcludeMember(GROUPING, uhUuid));
 
         addMember(GROUPING_EXCLUDE, uid);
         addMember(GROUPING_EXCLUDE, uhUuid);
-        assertTrue(memberService.isExcludeMember(GROUPING_EXCLUDE, uid));
-        assertTrue(memberService.isExcludeMember(GROUPING_EXCLUDE, uhUuid));
+        assertTrue(memberService.isExcludeMember(GROUPING, uid));
+        assertTrue(memberService.isExcludeMember(GROUPING, uhUuid));
 
         removeMember(GROUPING_EXCLUDE, uid);
         removeMember(GROUPING_EXCLUDE, uhUuid);
-        assertFalse(memberService.isExcludeMember(GROUPING_EXCLUDE, uid));
-        assertFalse(memberService.isExcludeMember(GROUPING_EXCLUDE, uhUuid));
+        assertFalse(memberService.isExcludeMember(GROUPING, uid));
+        assertFalse(memberService.isExcludeMember(GROUPING, uhUuid));
     }
 
     @Test
     public void testIsOwner() {
-        membershipService.removeOwnerships(GROUPING, ADMIN, TEST_UH_USERNAMES);
-        membershipService.removeOwnerships(GROUPING, ADMIN, TEST_UH_NUMBERS);
+        String uid = TEST_UH_USERNAMES.get(0);
+        String uhUuid = TEST_UH_NUMBERS.get(1);
 
-        TEST_UH_USERNAMES.forEach(testUsername -> {
-            assertFalse(memberAttributeService.isOwner(GROUPING, testUsername));
-        });
-        TEST_UH_NUMBERS.forEach(testUsername -> {
-            assertFalse(memberAttributeService.isOwner(GROUPING, testUsername));
-        });
+        removeMember(GROUPING_OWNERS, uid);
+        removeMember(GROUPING_OWNERS, uhUuid);
+        assertFalse(memberService.isOwner(GROUPING, uid));
+        assertFalse(memberService.isOwner(GROUPING, uhUuid));
 
-        membershipService.addOwnerships(GROUPING, ADMIN, TEST_UH_USERNAMES);
-        membershipService.addOwnerships(GROUPING, ADMIN, TEST_UH_NUMBERS);
+        addMember(GROUPING_OWNERS, uid);
+        addMember(GROUPING_OWNERS, uhUuid);
+        assertTrue(memberService.isOwner(GROUPING, uid));
+        assertTrue(memberService.isOwner(GROUPING, uhUuid));
 
-        TEST_UH_USERNAMES.forEach(testUsername -> {
-            assertTrue(memberAttributeService.isOwner(GROUPING, testUsername));
-        });
-        TEST_UH_NUMBERS.forEach(testUsername -> {
-            assertTrue(memberAttributeService.isOwner(GROUPING, testUsername));
-        });
-        membershipService.removeOwnerships(GROUPING, ADMIN, TEST_UH_USERNAMES);
-        membershipService.removeOwnerships(GROUPING, ADMIN, TEST_UH_NUMBERS);
+        removeMember(GROUPING_OWNERS, uid);
+        removeMember(GROUPING_OWNERS, uhUuid);
+        assertFalse(memberService.isOwner(GROUPING, uid));
+        assertFalse(memberService.isOwner(GROUPING, uhUuid));
     }
 
     private void addMember(String groupPath, String uhIdentifier) {
