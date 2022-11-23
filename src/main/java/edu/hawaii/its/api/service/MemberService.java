@@ -19,14 +19,15 @@ public class MemberService {
     private SubjectService subjectService;
 
     public boolean isAdmin(String uhIdentifier) {
-        HasMemberCommand hasMemberCommand = new HasMemberCommand(GROUPING_ADMINS, uhIdentifier);
+        String validUhUuid = subjectService.getValidUhUuid(uhIdentifier);
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(GROUPING_ADMINS, validUhUuid);
         return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
    // public GroupingHasMemberResult isAdminResult(String uhIdentifier);
 
     public boolean isMember(String groupPath, String uhIdentifier) {
-
-        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupPath, uhIdentifier);
+        String validUhUuid = subjectService.getValidUhUuid(uhIdentifier);
+        HasMemberCommand hasMemberCommand = new HasMemberCommand(groupPath, validUhUuid);
         return hasMemberCommand.execute().getResultCode().equals("IS_MEMBER");
     }
     // public GroupingHasMemberResult isMemberResult(String uhIdentifier);
@@ -38,13 +39,17 @@ public class MemberService {
     // public GroupingHasMemberResult isIncludeMemberResult(String uhIdentifier);
 
     public boolean isExcludeMember(String groupingPath, String uhIdentifier) {
-        return isMember(groupingPath + ":exclude", uhIdentifier);
+        String validUhUuid = subjectService.getValidUhUuid(uhIdentifier);
+        return isMember(groupingPath + ":exclude", validUhUuid);
     }
     // public GroupingHasMemberResult isExcludeMemberResult(String uhIdentifier);
 
     public boolean isOwner(String groupingPath, String uhIdentifier) {
-        return isMember(groupingPath + ":owners", uhIdentifier);
+        String validUhUuid = subjectService.getValidUhUuid(uhIdentifier);
+        return isMember(groupingPath + ":owners", validUhUuid);
     }
+
+
     // public GroupingHasMemberResult isOwnerResult(String uhIdentifier);
     /*
     public GroupingHasMembersResult hasAdmins(List<String> uhIdentifiers);

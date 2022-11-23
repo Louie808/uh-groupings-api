@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
+import edu.hawaii.its.api.exception.UhMemberNotFoundException;
 import edu.hawaii.its.api.wrapper.AddMemberCommand;
 import edu.hawaii.its.api.wrapper.RemoveMemberCommand;
 
@@ -14,7 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ActiveProfiles("integrationTest")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -52,6 +55,13 @@ public class TestMemberService {
         String uid = TEST_UH_USERNAMES.get(0);
         String uhUuid = TEST_UH_NUMBERS.get(1);
 
+        try {
+            memberService.isAdmin("bogus-user");
+            fail("Should throw an exception if user is not valid");
+        } catch (UhMemberNotFoundException e) {
+            assertNull(e.getCause());
+        }
+
         removeMember(GROUPING_ADMINS, uid);
         removeMember(GROUPING_ADMINS, uhUuid);
         assertFalse(memberService.isAdmin(uid));
@@ -72,6 +82,13 @@ public class TestMemberService {
     public void testIsMember() {
         String uid = TEST_UH_USERNAMES.get(0);
         String uhUuid = TEST_UH_NUMBERS.get(1);
+
+        try {
+            memberService.isMember(GROUPING, "bogus-user");
+            fail("Should throw an exception if user is not valid");
+        } catch (UhMemberNotFoundException e) {
+            assertNull(e.getCause());
+        }
 
         removeMember(GROUPING_BASIS, uid);
         removeMember(GROUPING_BASIS, uhUuid);
@@ -94,6 +111,13 @@ public class TestMemberService {
         String uid = TEST_UH_USERNAMES.get(0);
         String uhUuid = TEST_UH_NUMBERS.get(1);
 
+        try {
+            memberService.isIncludeMember(GROUPING, "bogus-user");
+            fail("Should throw an exception if user is not valid");
+        } catch (UhMemberNotFoundException e) {
+            assertNull(e.getCause());
+        }
+
         removeMember(GROUPING_INCLUDE, uid);
         removeMember(GROUPING_INCLUDE, uhUuid);
         assertFalse(memberService.isIncludeMember(GROUPING, uid));
@@ -115,6 +139,13 @@ public class TestMemberService {
         String uid = TEST_UH_USERNAMES.get(0);
         String uhUuid = TEST_UH_NUMBERS.get(1);
 
+        try {
+            memberService.isExcludeMember(GROUPING, "bogus-user");
+            fail("Should throw an exception if user is not valid");
+        } catch (UhMemberNotFoundException e) {
+            assertNull(e.getCause());
+        }
+
         removeMember(GROUPING_EXCLUDE, uid);
         removeMember(GROUPING_EXCLUDE, uhUuid);
         assertFalse(memberService.isExcludeMember(GROUPING, uid));
@@ -135,6 +166,13 @@ public class TestMemberService {
     public void testIsOwner() {
         String uid = TEST_UH_USERNAMES.get(0);
         String uhUuid = TEST_UH_NUMBERS.get(1);
+
+        try {
+            memberService.isOwner(GROUPING, "bogus-user");
+            fail("Should throw an exception if user is not valid");
+        } catch (UhMemberNotFoundException e) {
+            assertNull(e.getCause());
+        }
 
         removeMember(GROUPING_OWNERS, uid);
         removeMember(GROUPING_OWNERS, uhUuid);
