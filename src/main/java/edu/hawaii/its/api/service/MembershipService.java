@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +45,8 @@ import edu.hawaii.its.api.wrapper.SubjectsResults;
 
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
+
+import static edu.hawaii.its.api.service.PathFilter.onlyMembershipPaths;
 
 @Service("membershipService")
 public class MembershipService {
@@ -126,22 +129,13 @@ public class MembershipService {
         List<String> groupPaths;
         List<String> optOutList;
         try {
-            groupPaths = groupingAssignmentService.getGroupPaths(currentUser, uid);
+            groupPaths = groupingAssignmentService.getGroupPaths(currentUser, uid, onlyMembershipPaths());
             optOutList = groupingAssignmentService.optableGroupings(OptType.OUT.value());
         } catch (GcWebServiceError e) {
             return memberships;
         }
 
-        List<String> membershipGroupPaths = new ArrayList<>();
-        for (String path : groupPaths) {
-            if (path.endsWith(GroupType.INCLUDE.value()) ||
-                (!path.endsWith(GroupType.EXCLUDE.value()) &&
-                        path.endsWith(GroupType.BASIS.value()))) {
-                membershipGroupPaths.add(path);
-            }
-        }
-
-        return createMembershipList(membershipGroupPaths, optOutList, memberships);
+        return createMembershipList(groupPaths, optOutList, memberships);
     }
 
     /**
@@ -526,26 +520,16 @@ public class MembershipService {
      * Get the number of memberships.
      */
     public Integer numberOfMemberships(String currentUser, String uid) {
-        List<String> groupPaths = fetchGroupPaths(currentUser, uid);
-        int numberOfMemberships = 0;
-
-        for (String pathToCheck : groupPaths) {
-            if (pathToCheck.endsWith(GroupType.INCLUDE.value())
-                    || (!pathToCheck.endsWith(GroupType.EXCLUDE.value())
-                    && pathToCheck.endsWith(GroupType.BASIS.value()))) {
-                numberOfMemberships++;
-            }
-        }
-        return numberOfMemberships;
+        return fetchGroupPaths(currentUser, uid, onlyMembershipPaths()).size();
     }
 
     /**
-     * Helper - getNumberOfMemberships
+     * Helper - numberOfMemberships
      */
-    private List<String> fetchGroupPaths(String currentUser, String uid) {
+    private List<String> fetchGroupPaths(String currentUser, String uid, Predicate<String> predicate) {
         List<String> groupPaths = new ArrayList<>();
         try {
-            groupPaths = groupingAssignmentService.getGroupPaths(currentUser, uid);
+            groupPaths = groupingAssignmentService.getGroupPaths(currentUser, uid, predicate);
         } catch (GcWebServiceError e) {
             // Returning empty list for an expected error
         }
